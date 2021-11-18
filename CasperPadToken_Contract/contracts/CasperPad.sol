@@ -9,7 +9,7 @@
 
 //SPDX-License-Identifier: Unlicense
 
-pragma solidity ^0.8.0;
+pragma solidity 0.8.4;
 
 interface IBEP20 {
   /**
@@ -522,7 +522,7 @@ contract LGEWhitelisted is Context {
     }
 }
 
-contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
+contract CSPDTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     
     using SafeMath for uint256;
     
@@ -536,7 +536,7 @@ contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     string private _name;
     
     constructor() {
-        _name = "GHOSP";
+        _name = "CSPD";
         _symbol = "GHSP";
         _decimals = 18;
         _totalSupply = 100000000 * 10 ** 18;
@@ -574,21 +574,21 @@ contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     }
     
     /**
-    * @dev See {GHOSP-totalSupply}.
+    * @dev See {CSPD-totalSupply}.
     */
     function totalSupply() external view override returns (uint256) {
         return _totalSupply;
     }
     
     /**
-    * @dev See {GHOSP-balanceOf}.
+    * @dev See {CSPD-balanceOf}.
     */
     function balanceOf(address account) external view override returns (uint256) {
         return _balances[account];
     }
     
     /**
-    * @dev See {GHOSP-transfer}.
+    * @dev See {CSPD-transfer}.
     *
     * Requirements:
     *
@@ -601,14 +601,14 @@ contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     }
     
     /**
-    * @dev See {GHOSP-allowance}.
+    * @dev See {CSPD-allowance}.
     */
     function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
     }
     
     /**
-    * @dev See {GHOSP-approve}.
+    * @dev See {CSPD-approve}.
     *
     * Requirements:
     *
@@ -620,10 +620,10 @@ contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     }
     
     /**
-    * @dev See {GHOSP-transferFrom}.
+    * @dev See {CSPD-transferFrom}.
     *
     * Emits an {Approval} event indicating the updated allowance. This is not
-    * required by the EIP. See the note at the beginning of {GHOSP};
+    * required by the EIP. See the note at the beginning of {CSPD};
     *
     * Requirements:
     * - `sender` and `recipient` cannot be the zero address.
@@ -633,7 +633,7 @@ contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     */
     function transferFrom(address sender, address recipient, uint256 amount) external override returns (bool) {
         _transfer(sender, recipient, amount);
-        _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "GHOSP: transfer amount exceeds allowance"));
+        _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "CSPD: transfer amount exceeds allowance"));
         return true;
     }
     
@@ -641,7 +641,7 @@ contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     * @dev Atomically increases the allowance granted to `spender` by the caller.
     *
     * This is an alternative to {approve} that can be used as a mitigation for
-    * problems described in {GHOSP-approve}.
+    * problems described in {CSPD-approve}.
     *
     * Emits an {Approval} event indicating the updated allowance.
     *
@@ -658,7 +658,7 @@ contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     * @dev Atomically decreases the allowance granted to `spender` by the caller.
     *
     * This is an alternative to {approve} that can be used as a mitigation for
-    * problems described in {GHOSP-approve}.
+    * problems described in {CSPD-approve}.
     *
     * Emits an {Approval} event indicating the updated allowance.
     *
@@ -669,7 +669,7 @@ contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     * `subtractedValue`.
     */
     function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool) {
-        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].sub(subtractedValue, "GHOSP: decreased allowance below zero"));
+        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].sub(subtractedValue, "CSPD: decreased allowance below zero"));
         return true;
     }
     
@@ -688,12 +688,12 @@ contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     * - `sender` must have a balance of at least `amount`.
     */
     function _transfer(address sender, address recipient, uint256 amount) internal {
-        require(sender != address(0), "GHOSP: transfer from the zero address");
-        require(recipient != address(0), "GHOSP: transfer to the zero address");
+        require(sender != address(0), "CSPD: transfer from the zero address");
+        require(recipient != address(0), "CSPD: transfer to the zero address");
         
         _applyLGEWhitelist(sender, recipient, amount);
         
-        _balances[sender] = _balances[sender].sub(amount, "GHOSP: transfer amount exceeds balance");
+        _balances[sender] = _balances[sender].sub(amount, "CSPD: transfer amount exceeds balance");
         _balances[recipient] = _balances[recipient].add(amount);
         emit Transfer(sender, recipient, amount);
     }
@@ -712,8 +712,8 @@ contract GHOSPTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     * - `spender` cannot be the zero address.
     */
     function _approve(address owner, address spender, uint256 amount) internal {
-        require(owner != address(0), "GHOSP: approve from the zero address");
-        require(spender != address(0), "GHOSP: approve to the zero address");
+        require(owner != address(0), "CSPD: approve from the zero address");
+        require(spender != address(0), "CSPD: approve to the zero address");
         
         _allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);
