@@ -537,7 +537,7 @@ contract CSPDTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     
     constructor() {
         _name = "CSPD";
-        _symbol = "GHSP";
+        _symbol = "CSPD";
         _decimals = 18;
         _totalSupply = 100000000 * 10 ** 18;
         _balances[_msgSender()] = _totalSupply;
