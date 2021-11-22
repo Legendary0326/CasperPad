@@ -5,9 +5,12 @@ import Footer from '../components/Footer';
 import Background from '../components/Background';
 import Hero from '../components/Home/Hero';
 import AboutUs from '../components/Home/AboutUs';
+import Tiers from '../components/Home/Tiers';
+import Tokenomics from '../components/Home/Tokenomics';
 import System from '../components/Home/System';
 import Advisors from '../components/Home/Advisors';
 import Contact from '../components/Home/Contact';
+import ParticlesContainer from "../components/ParticlesContainer";
 
 export default function Home() {
 
@@ -17,8 +20,10 @@ export default function Home() {
             <Background />
             <Hero />
             <AboutUs />
+            <Tiers />
+            <Tokenomics />
             <System />
-            <Advisors />
+            {/* <Advisors /> */}
             <Contact />
             <Footer />
         </>

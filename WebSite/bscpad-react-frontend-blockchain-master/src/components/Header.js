@@ -23,7 +23,8 @@ class Header extends Component {
             <section className="header">
                 <nav className="navbar">
                     <Link to="/">
-                        <img src={logo} alt="logo"></img><span>BSCPad</span>
+                        <img src={logo} alt="logo"></img>
+                        <span>CasperPad</span>
                     </Link>
                     <div className="nav-center">
                         <ul className={this.state.isOpen ? "nav-links show-nav" : "nav-links"}>

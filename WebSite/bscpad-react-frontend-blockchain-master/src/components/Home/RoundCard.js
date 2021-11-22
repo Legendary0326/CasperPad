@@ -25,7 +25,7 @@ export default function RoundCard({ round }) {
             </div>
             <hr />
             <div className="round-card-footer">
-                <button type="button" className="btn btn-warning button-large">Learn More</button>
+                <button type="button" className="btn btn-pro button-large">Learn More</button>
             </div>
         </section>
     );

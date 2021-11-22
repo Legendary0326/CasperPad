@@ -8,20 +8,42 @@ export default class AboutUs extends Component {
             <div className="container aboutus">
                 <h2 className="col-12 text-center font-weight-bold text-white hero-title">About Us</h2>
                 <div className="row">
-                    <div className="col-md-6 mx-3 mx-md-0">
-                        <p className="hero-description font-weight-bold">WHAT IS BSCPAD?</p>
-                        <p className="hero-description text-white font-weight-bold">The BSC Launch Pad is the first decentralized IDO platform for the Binance Smart Chain Network.</p>
-                        <p className="hero-description">BSCPad will empower crypto currency projects with the ability to distribute tokens and raise liquidity.</p><br />
+                    <div className="col-md-6 mx-3 mx-md-0 d-flex flex-column">
+                        <p className="hero-description font-weight-bold mt-auto"><h3>Who We Are?</h3></p>
+                        <p className="hero-description text-white font-weight-bold"><h4>We are the first key to the Casper Network Ecosystem. Once we unlock this door, projects can start launching on the Casper Network through our extensive IDO network.</h4></p>
+                        <p className="hero-description">CasperPad will empower crypto currency projects with the ability to distribute tokens and raise liquidity.</p><br />
 
-                        <p className="hero-description font-weight-bold">WHY CHOOSE US?</p>
-                        <p className="hero-description text-white font-weight-bold">BSCPad has found a solution to incentivize and reward all token holders in a way that is inclusive and with a low barrier to entry.</p>
-                        <p className="hero-description">The fundamental flaws of existing launchpads is that acquiring enough tokens to participate in the ecosystem is prohibitive, and even if you do hold the tokens, you are not guaranteed an allocation spot. They are based on a first come first serve basis where automated bots can fill the whitelist spots in a matter of seconds. BSCPad is creating fair decentralized launches.</p>
-
-                        <p className="hero-description">The hallmark of the BSCPad is a two-round system that makes every tier level guaranteed an allocation. There is no luck, and no lotteries, and no bots; only fair distributed rewards for all participants.</p>
+                        <p className="hero-description font-weight-bold"><h3>What We Do?</h3></p>
+                        <p className="hero-description text-white font-weight-bold mb-auto"><h4>We will assist in Blockchain development, marketing, strategies, and listings. Launching through CasperPad empowers your project and gives it high legitimacy if you pass our screening systems.</h4></p>
                     </div>
                     <div className="col-md-6 mx-3 mx-md-0 text-center rotation-container">
-                        <div className="rotation"></div>
-                        <img src={aboutus} alt="about us" />
+                        <section className="container round">
+                            <section className="projects_about">
+                                <section className="projects_about">
+                                    <section className="round-card round-card_about">
+                                        <div className="round-card-header"> <h6 className="text-white"> Officially <br/>Endorsed <br/>Launchpad</h6> </div>
+                                        <p className="hero-description mb-3">We will be the first Launchpad that is endorsed by its own Blockchain.</p>
+                                        <hr />
+                                    </section>
+                                    <section className="round-card">
+                                        <div className="round-card-header"> <h6 className="text-white"> Strict <br/>Launch <br/>System</h6> </div>
+                                        <p className="hero-description mb-3">We go through each application in detail to understand their needs and if they apply to our community wants.</p>
+                                        <hr />
+                                    </section>
+                                </section>
+                                <section className="projects_about d-flex">
+                                    <section className="round-card mt-auto mb-auto">
+                                        <div className="round-card-header"> <h6 className="text-white"> Fair <br/>Allocation <br/>System</h6> </div>
+                                        <p className="hero-description mb-3">We believe in decentralization and understand that there are investors with different needs.</p>
+                                        <hr />
+                                    </section>
+                                </section>
+                            </section>
+
+                            
+                        </section>
+                        {/* <div className="rotation"></div> */}
+                        {/* <img src={aboutus} alt="about us" /> */}
                     </div>
                 </div>
             </div >

@@ -7,11 +7,11 @@ export default class System extends Component {
     render() {
         return (
             <div className="container system">
-                <h2 className="col-12 text-center font-weight-bold text-white hero-title">The BSCPad Tiered System</h2>
-                <p className="hero-description text-center">BSCPad will showcase a fixed tier system based on the number of tokens held.</p>
+                <h2 className="col-12 text-center font-weight-bold text-white hero-title">The CasperPad Tiered System</h2>
+                <p className="hero-description text-center">CasperPad will showcase a fixed tier system based on the number of tokens held.</p>
 
                 <Round1 />
-                <Round2 />
+                {/* <Round2 /> */}
             </div >
         );
     }

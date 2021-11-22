@@ -46,42 +46,42 @@ const projects = [
 
 const rounds = [
     {
-        name: 'Bronze',
+        name: 'Tier1',
         requirement: 1000,
         length: '3 hours before Allocation Round opens',
         whitelist: 'Like, Comment & Retweet',
         allocation: 'Yes',
         pool_weight: '10'
     }, {
-        name: 'Silver',
+        name: 'Tier2',
         requirement: 2500,
         length: '3 hours before Allocation Round opens',
         whitelist: 'Like, Comment & Retweet',
         allocation: 'Yes',
         pool_weight: '30'
     }, {
-        name: 'Gold',
+        name: 'Tier3',
         requirement: 5000,
         length: '3 hours before Allocation Round opens',
         whitelist: 'None',
         allocation: 'Yes',
         pool_weight: '65'
     }, {
-        name: 'Platinum',
+        name: 'Tier4',
         requirement: 10000,
         length: '3 hours before Allocation Round opens',
         whitelist: 'None',
         allocation: 'Yes',
         pool_weight: '145'
     }, {
-        name: 'Bronze',
+        name: 'Tier5',
         requirement: 25000,
         length: '3 hours before Allocation Round opens',
         whitelist: 'None',
         allocation: 'Yes',
         pool_weight: '400'
     }, {
-        name: 'Bronze',
+        name: 'Tier6',
         requirement: 75000,
         length: '3 hours before Allocation Round opens',
         whitelist: 'None',
