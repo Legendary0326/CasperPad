@@ -14,10 +14,18 @@ function App() {
   return (
     <Provider store={store}>
       <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/projects/" component={Projects} />
-        <Route exact path="/staking/" component={Staking} />
-        <Route exact path="/error/" component={Error} />
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route exact path="/projects/">
+          <Projects />
+        </Route>
+        <Route exact path="/staking/">
+          <Staking />
+        </Route>
+        <Route exact path="/error/">
+          <Error />
+        </Route>
       </Switch>
     </Provider>
   );

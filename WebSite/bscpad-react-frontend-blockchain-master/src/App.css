@@ -52,6 +52,12 @@
   font-weight: 400;
   font-style: normal;
 }
+@font-face {
+  font-family: Bw-Gradual-eb;
+  src: url('./assets/css/fonts/BwGradualDEMO-ExtraBold.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
 :root {
   /* --primary-text-color: #f1b90c; */
   --primary-text-color: #6239f2;
@@ -94,7 +100,8 @@ body {
   padding-top: 100px;
   color: var(--mainBlack);
   background: #1a1a1a;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
+  font-family: Bw-Gradual-eb;
   line-height: 1.4;
 }
 @media (max-width: 720px) {
@@ -1011,5 +1018,55 @@ button:focus { outline: none; }
   color: #ffffff;
   background-color: #5229e4;
   border-color: var(--primary-text-color);
+}
+
+.btn-wallet {
+  color: #ffffff;
+}
+
+.btn-wallet:hover {
+  color: var(--primary-text-color);
+}
+
+.btn-wallet:focus {
+  box-shadow: none;
+}
+
+.modal-content {
+  background: #1a1a1a;
+  color: #fff;
+}
+.modal-header {
+  background-color: #212121;
+  border-bottom: 1px rgba(0, 0, 0, 0.3) solid;
+}
+
+.modal-header .close {
+  color: white;
+}
+
+.border-b {
+  border-bottom: 1px solid #272727;
+}
+div.fade.modal {
+  display: flex !important;
+}
+.modal-dialog {
+  min-width: 500px;
+  margin: auto;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.wallet-connected{
+  background-color: var(--primary-text-color);
+  border-radius: 15em;
+  font-weight: bold;
+
+}
+
+.wallet-connected:hover{
+  background-color: #5229e4;
+  color: white;
 }
 /* end of custom switch */

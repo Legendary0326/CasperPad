@@ -7,11 +7,14 @@ import "./assets/css/bootstrap.min.css";
 import App from './App';
 
 import reportWebVitals from './reportWebVitals';
+import { DAppProvider, ChainId } from '@usedapp/core'
 
 ReactDOM.render(
-  <Router>
-    <App />
-  </Router>,
+  <DAppProvider config={{}}>
+    <Router>
+      <App />
+    </Router>
+  </DAppProvider>,
   document.getElementById('root')
 );
 
