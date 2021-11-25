@@ -10,7 +10,7 @@ import Tokenomics from '../components/Home/Tokenomics';
 import System from '../components/Home/System';
 import Advisors from '../components/Home/Advisors';
 import Contact from '../components/Home/Contact';
-import ParticlesContainer from "../components/ParticlesContainer";
+import Particles from 'react-particles-js';
 
 export default function Home() {
 

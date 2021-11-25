@@ -62,6 +62,13 @@
   /* --primary-text-color: #f1b90c; */
   --primary-text-color: #6239f2;
   --primaryColor: #af9a7d;
+  --secondaryColor: #03dac6;
+  --tertiaryColorA: #caf239;
+  --tertiaryColorB: #f239ca;
+  --tertiaryColorC: #ff8a6afc;
+  --tertiaryColorD: #be39f2;
+  --tertiaryColorE: #396df2;
+  /* --tertiaryColor: rgb(255 240 7); */
   --mainWhite: #fff;
   --offWhite: #f7f7f7;
   --mainBlack: #222;
@@ -101,7 +108,7 @@ body {
   color: var(--mainBlack);
   background: #1a1a1a;
   /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
-  font-family: Bw-Gradual-eb;
+  font-family: Bw-Gradual-eb !important;
   line-height: 1.4;
 }
 @media (max-width: 720px) {
@@ -446,8 +453,8 @@ button:focus { outline: none; }
   content: '';
   border-radius: 50%;
   border: 4px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #6239f2;
-  border-right-color: #6239f2;
+  border-top-color: var(--tertiaryColorC);
+  border-right-color: var(--tertiaryColorC);
   animation: cssload-spin 15s linear infinite 0s;
   top: 0;
   left: 0;
@@ -459,8 +466,8 @@ button:focus { outline: none; }
   content: '';
   border-radius: 50%;
   border: 4px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #6239f2;
-  border-right-color: #6239f2;
+  border-top-color: var(--tertiaryColorC);
+  border-right-color: var(--tertiaryColorC);
   animation: cssload-spin 10s linear infinite 0s;
   top: -30px;
   left: -30px;
@@ -544,7 +551,7 @@ button:focus { outline: none; }
   .round .projects { grid-template-columns: 1fr; }
 }
 
-.round .round-card_tokenomics hr { background: rgb(255 255 255 / 70%); }
+.round .round-card_tokenomics hr { background: var(--tertiaryColorC); }
 @media (max-width: 768px) {
   .round-title { font-size: 22px; }
   .round .projects { grid-template-columns: 1fr; }
@@ -656,7 +663,7 @@ button:focus { outline: none; }
   padding: 5px 15px;
   border-radius: 20px;
   font-size: 12px;
-  color: var(--primary-text-color);
+  color: #ffc107;
   background-color: rgb(240 185 19 / 26%);
   width: auto;
 }
@@ -735,8 +742,10 @@ button:focus { outline: none; }
   font-size: 16px;
 }
 .tabs .nav-link.active {
-  border-bottom: 4px #F0B90B solid;
-  color: #F0B90B !important;
+  border-bottom: 4px #6c48ed solid;
+  color: #6c48ed !important;
+  /* border-bottom: 4px #F0B90B solid; */
+  /* color: #F0B90B !important; */
 }
 .tabs-card .round-card {
   text-align: center;
@@ -1068,5 +1077,27 @@ div.fade.modal {
 .wallet-connected:hover{
   background-color: #5229e4;
   color: white;
+}
+
+.bg-pro {
+  background-color: var(--primary-text-color);
+}
+
+.container > h2 {
+  color: white !important;
+}
+
+.hero > h2 {
+  color: white !important;
+}
+
+h3 {
+  color: var(--tertiaryColorC);
+}
+.text-tertiary {
+  color: var(--tertiaryColorC) !important;
+}
+.round-card-header_tokenomics > h1 {
+  color: var(--tertiaryColorC);
 }
 /* end of custom switch */

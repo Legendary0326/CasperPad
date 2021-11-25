@@ -11,7 +11,7 @@ export default class Tiers extends Component {
                     <div className="col-md-6 mx-3 mx-md-0 text-center rotation-container">
                         
                         <div className="col-12 rotation"></div>
-                        <h3 className="col-12 text-center font-weight-bold text-white hero-title">CasperPad <br/>Allocation <br/>System</h3>
+                        <h6 className="col-12 text-center font-weight-bold text-tertiary hero-title">CasperPad <br/>Allocation <br/>System</h6>
                         {/* <img src={allocation_system} alt="about us" /> */}
                     </div>
                     <div className="col-md-6 mx-3 mx-md-0 d-flex flex-column">

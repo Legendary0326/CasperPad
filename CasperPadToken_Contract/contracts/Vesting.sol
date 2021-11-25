@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity 0.8.4;
+pragma solidity 0.8.7;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -98,6 +98,9 @@ interface IBEP20 {
  * Tracer Standard Vesting Contract
  */
 contract Vesting is Ownable {
+    mapping(address => uint256) public vestedAmount;
+    mapping(address => uint256) public claimedAmount;
+    
     struct Schedule {
         uint256 totalAmount;
         uint256 claimedAmount;
@@ -118,7 +121,9 @@ contract Vesting is Ownable {
     event Vest(address indexed to, uint256 amount);
     event Cancelled(address account);
 
-    constructor() {}
+    constructor() {
+        uint256 public immutable unlockPercentsOnStart = 5;
+    }
 
     /**
      * @notice Sets up a vesting schedule for a set user.
@@ -283,7 +288,7 @@ contract Vesting is Ownable {
     }
 
     /**
-     * @notice Withdraws TCR tokens from the contract.
+     * @notice Withdraws CSPD tokens from the contract.
      * @dev blocks withdrawing locked tokens.
      */
     function withdraw(uint256 amount, address asset) external onlyOwner {
@@ -293,5 +298,33 @@ contract Vesting is Ownable {
             "Vesting: Can't withdraw"
         );
         require(token.transfer(owner(), amount), "Vesting: withdraw failed");
+    }
+
+     /**
+     * @notice add multi investor to vesting.
+     * @dev admin add the multi investor to vesting.
+     */
+    function addInvestors(address[] memory investors, uint256[] memory amounts) external onlyOwner {
+        uint256 totalAmount = 0;
+        uint256 length = investors.length;
+        require(amounts.length == length, "ICL");
+
+        for (uint256 i = 0; i < length; i++) {
+            vestedAmount[investors[i]] += amounts[i];
+            totalAmount += amounts[i];
+            emit NewVesting(investors[i], amounts[i]);
+        }
+
+        token.safeTransferFrom(msg.sender, address(this), totalAmount);
+    }
+
+     /**
+     * @notice add investor to vesting.
+     * @dev admin add the investor to vesting.
+     */
+    function addInvestor(address investor, uint256 amount) external onlyOwner {
+        vestedAmount[investor] += amount;
+        token.safeTransferFrom(msg.sender, address(this), amount);
+        emit NewVesting(investor, amount);
     }
 }

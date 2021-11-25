@@ -1,10 +1,13 @@
-import React from 'react';
+import { React, useEffect } from 'react';
 import ParticlesContainer from "./ParticlesContainer";
 
 export default function Background() {
+    
     return (
-        <div className="background">
+        <>
+            <div className="background">
                 <ParticlesContainer />
-        </div>
+            </div>
+        </>
     )
 }

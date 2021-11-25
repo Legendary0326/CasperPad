@@ -33,8 +33,8 @@ export default function Staking() {
                     {wizard === 'unstake' && <Warning />}
 
                     <div className="d-flex justify-content-center my-3">
-                        <button type="button" className="btn btn-warning button-small text-white mx-3" style={{ width: '100px' }}>Previous</button>
-                        <button type="button" className="btn btn-warning button-small text-white mx-3" style={{ width: '100px' }}>Next</button>
+                        <button type="button" className="btn btn-pro button-small text-white mx-3" style={{ width: '100px' }}>Previous</button>
+                        <button type="button" className="btn btn-pro button-small text-white mx-3" style={{ width: '100px' }}>Next</button>
                     </div>
 
                 </div>

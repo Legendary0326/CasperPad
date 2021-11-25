@@ -12,8 +12,8 @@ export default function CheckpointCard({ content }) {
             <div className="round-card-body">
                 <p className="hero-description mb-1">{content.value}</p>
                 {content.name === 'Rewards' && <div className="d-flex justify-content-around">
-                    <button type="button" className="btn btn-warning button-small text-white" style={{ width: '40%' }}>Stake</button>
-                    <button type="button" className="btn btn-warning button-small text-white" style={{ width: '40%' }}>Withdraw</button>
+                    <button type="button" className="btn btn-pro button-small text-white" style={{ width: '40%' }}>Stake</button>
+                    <button type="button" className="btn btn-pro button-small text-white" style={{ width: '40%' }}>Withdraw</button>
                 </div>}
             </div>
             <hr />

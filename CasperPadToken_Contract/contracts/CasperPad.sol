@@ -9,7 +9,7 @@
 
 //SPDX-License-Identifier: Unlicense
 
-pragma solidity 0.8.4;
+pragma solidity 0.8.7;
 
 interface IBEP20 {
   /**
@@ -539,7 +539,7 @@ contract CSPDTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
         _name = "CSPD";
         _symbol = "CSPD";
         _decimals = 18;
-        _totalSupply = 100000000 * 10 ** 18;
+        _totalSupply = 500000000 * 10 ** 18;
         _balances[_msgSender()] = _totalSupply;
 
         emit Transfer(address(0), _msgSender(), _totalSupply);

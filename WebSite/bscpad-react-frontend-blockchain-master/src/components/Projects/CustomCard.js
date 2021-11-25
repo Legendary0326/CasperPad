@@ -22,12 +22,16 @@ export default function CustomCard({ project }) {
                         <BsCircleFill style={{ fontSize: '.6rem', verticalAlign: 'middle' }} />
                         {project.status === 'Coming' ? ' Opens in TBA' : project.status === 'Open' ? ' Opened' : ' Closed'}
                     </span>
-                    <span className="status">BUSD</span>
+                    <div className="social-links">
+                        <span className="status">USDC</span>
+                        <span className="status">USDT</span>
+                        <span className="status">BUSD</span>
+                    </div>
                 </div>
             </div>
             <div className="custom-card-body">
                 {project.message}
-                <a href="www.google.com" style={{ color: '#f1b90c', marginTop: '10px' }}>Learn more</a>
+                <a href="www.google.com" style={{ color: '#6239f2', marginTop: '10px' }}>Learn more</a>
             </div>
             <div className="custom-card-footer">
                 <div className="information">
@@ -40,7 +44,7 @@ export default function CustomCard({ project }) {
                         <span>Progress</span>
                         <span>Participants <span style={{ color: 'white', fontWeight: 'bold' }}>3812</span></span>
                     </div>
-                    <ProgressBar now={project.progress} variant="warning" />
+                    <ProgressBar now={project.progress} variant="pro" />
                     <div className="progress-title">
                         <span style={{ color: 'white', fontWeight: 'bold' }}>{project.progress}%</span>
                         <span style={{ color: 'white', fontWeight: 'bold' }}>300/200</span>

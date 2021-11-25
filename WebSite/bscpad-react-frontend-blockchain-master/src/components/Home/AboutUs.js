@@ -21,19 +21,19 @@ export default class AboutUs extends Component {
                             <section className="projects_about">
                                 <section className="projects_about">
                                     <section className="round-card round-card_about">
-                                        <div className="round-card-header"> <h6 className="text-white"> Officially <br/>Endorsed <br/>Launchpad</h6> </div>
+                                        <div className="round-card-header"> <h6 className="text-tertiary"> Officially <br/>Endorsed <br/>Launchpad</h6> </div>
                                         <p className="hero-description mb-3">We will be the first Launchpad that is endorsed by its own Blockchain.</p>
                                         <hr />
                                     </section>
                                     <section className="round-card">
-                                        <div className="round-card-header"> <h6 className="text-white"> Strict <br/>Launch <br/>System</h6> </div>
+                                        <div className="round-card-header"> <h6 className="text-tertiary"> Strict <br/>Launch <br/>System</h6> </div>
                                         <p className="hero-description mb-3">We go through each application in detail to understand their needs and if they apply to our community wants.</p>
                                         <hr />
                                     </section>
                                 </section>
                                 <section className="projects_about d-flex">
                                     <section className="round-card mt-auto mb-auto">
-                                        <div className="round-card-header"> <h6 className="text-white"> Fair <br/>Allocation <br/>System</h6> </div>
+                                        <div className="round-card-header"> <h6 className="text-tertiary"> Fair <br/>Allocation <br/>System</h6> </div>
                                         <p className="hero-description mb-3">We believe in decentralization and understand that there are investors with different needs.</p>
                                         <hr />
                                     </section>
