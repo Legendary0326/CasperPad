@@ -7,7 +7,7 @@ import { GiHamburgerMenu, FaDollarSign, FaUserCheck, IoShieldCheckmarkOutline, F
 export default function Wizard({ wizard }) {
     return (
         <section className="wizard">
-            <h2>{wizard === 'stake' ? 'Stake' : wizard === 'unstake' ? 'Unstake' : 'Withdraw'} your BSCPAD</h2>
+            <h2>{wizard === 'stake' ? 'Stake' : wizard === 'unstake' ? 'Unstake' : 'Withdraw'} your CasperPad</h2>
 
             {wizard === 'stake' && <div>
                 <div className="active">

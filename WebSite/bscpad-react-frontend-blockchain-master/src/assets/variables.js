@@ -134,7 +134,7 @@ const stakings = [
         name: 'Number of Stakers',
         value: '5133'
     }, {
-        name: 'Total BSCPAD Stacked',
+        name: 'Total CasperPad Stacked',
         value: '31957734.60'
     }, {
         name: 'APY',
@@ -152,14 +152,14 @@ const stakings = [
         name: 'Connected with MetaMask',
         value: 'If not connected, click the "Connect Wallet" button in the top right corner'
     }, {
-        name: 'BSCPAD available to deposit',
+        name: 'CasperPad available to deposit',
         value: 'Current Balance: 0.0000'
     }, {
         name: 'BNB available in wallet',
         value: 'BNB is required to pay transaction fees on the Binance Smart Chain network. BNB Balance: 0.0000'
     }, {
         name: 'Eligible to stake',
-        value: 'You cannot stake if you have an active BSCPAD unstake/withdrawal request'
+        value: 'You cannot stake if you have an active CasperPad unstake/withdrawal request'
     }
 ];
 

@@ -9,7 +9,7 @@ export default function Warning({ content }) {
         <section className="d-flex justify-content-around align-items-center my-5 py-3" style={{ bakcgroundColor: '#171717', color: '#f1b90c', boxShadow: '0px 10px rgb(0 0 0 / 5%)' }}>
             <ImWarning style={{ fontSize: '5rem', paddingRight: '10px' }} />
             <div>
-                <p>After Unstaking, you must wait 7 days before you can withdraw your BSCPAD and rewards.</p>
+                <p>After Unstaking, you must wait 7 days before you can withdraw your CasperPad and rewards.</p>
                 <p>The amount of tokens you Unstake will not count towards your tier level for upcoming Projects.</p>
             </div>
         </section >

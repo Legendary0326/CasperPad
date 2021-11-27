@@ -1,5 +1,5 @@
-# BSCPad Binance Smart Chain Network
-**BSCPad Binance Smart Chain Network** is a frontend with no backend written in React.js.
+# CasperPad Binance Smart Chain Network
+**BCasperPadSCPad Binance Smart Chain Network** is a frontend with no backend written in React.js.
 
 ### Prerequisites
 

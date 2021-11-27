@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 interface IBEP20 {
+    
   /**
    * @dev Returns the amount of tokens in existence.
    */
@@ -93,6 +94,7 @@ interface IBEP20 {
    * a call to {approve}. `value` is the new allowance.
    */
   event Approval(address indexed owner, address indexed spender, uint256 value);
+  
 }
 /**
  * Tracer Standard Vesting Contract
@@ -100,7 +102,15 @@ interface IBEP20 {
 contract Vesting is Ownable {
     mapping(address => uint256) public vestedAmount;
     mapping(address => uint256) public claimedAmount;
-    
+
+    struct Tier {
+        uint256 tierId;
+        uint256 amountMax;
+    }
+    uint256 public numberOfTiers;
+    mapping(uint256 => Tier) public tiers;
+    mapping(address => uint256) public whitelistOfTiers;     
+
     struct Schedule {
         uint256 totalAmount;
         uint256 claimedAmount;
@@ -116,13 +126,16 @@ contract Vesting is Ownable {
     mapping(address => uint256) public numberOfSchedules;
 
     mapping(address => uint256) public locked;
+    IBEP20 public immutable token;
 
     event Claim(address indexed claimer, uint256 amount);
     event Vest(address indexed to, uint256 amount);
     event Cancelled(address account);
 
-    constructor() {
-        uint256 public immutable unlockPercentsOnStart = 5;
+    event NewVesting(address indexed investor, uint256 amount);
+
+    constructor(IBEP20 _token) {
+        token = _token;
     }
 
     /**
@@ -133,8 +146,8 @@ contract Vesting is Ownable {
      * @param amount the amount of tokens being vested for the user.
      * @param asset the asset that the user is being vested
      * @param isFixed a flag for if the vesting schedule is fixed or not. Fixed vesting schedules can't be cancelled.
-     * @param cliffWeeks the number of weeks that the cliff will be present at.
-     * @param vestingWeeks the number of weeks the tokens will vest over (linearly)
+     * @param cliffDays the number of days that the cliff will be present at.
+     * @param vestingDays the number of days the tokens will vest over (linearly)
      * @param startTime the timestamp for when this vesting should have started
      */
     function vest(
@@ -142,14 +155,14 @@ contract Vesting is Ownable {
         uint256 amount,
         address asset,
         bool isFixed,
-        uint256 cliffWeeks,
-        uint256 vestingWeeks,
+        uint256 cliffDays,
+        uint256 vestingDays,
         uint256 startTime
     ) public onlyOwner {
         // ensure cliff is shorter than vesting
         require(
-            vestingWeeks > 0 && 
-            vestingWeeks >= cliffWeeks &&
+            vestingDays > 0 && 
+            vestingDays >= cliffDays &&
             amount > 0,
             "Vesting: invalid vesting params"
         );
@@ -168,8 +181,8 @@ contract Vesting is Ownable {
             amount,
             0,
             startTime,
-            startTime + (cliffWeeks * 1 weeks),
-            startTime + (vestingWeeks * 1 weeks),
+            startTime + (cliffDays * 1 days),
+            startTime + (vestingDays * 1 days),
             isFixed,
             asset
         );
@@ -186,8 +199,8 @@ contract Vesting is Ownable {
      * @param amount an array of the amount of tokens being vested for each user.
      * @param asset the asset that the user is being vested
      * @param isFixed bool setting if these vesting schedules can be rugged or not.
-     * @param cliffWeeks the number of weeks that the cliff will be present at.
-     * @param vestingWeeks the number of weeks the tokens will vest over (linearly)
+     * @param cliffDays the number of days that the cliff will be present at.
+     * @param vestingDays the number of days the tokens will vest over (linearly)
      * @param startTime the timestamp for when this vesting should have started
      */
     function multiVest(
@@ -195,8 +208,8 @@ contract Vesting is Ownable {
         uint256[] calldata amount,
         address asset,
         bool isFixed,
-        uint256 cliffWeeks,
-        uint256 vestingWeeks,
+        uint256 cliffDays,
+        uint256 vestingDays,
         uint256 startTime
     ) external onlyOwner {
         uint256 numberOfAccounts = accounts.length;
@@ -210,8 +223,8 @@ contract Vesting is Ownable {
                 amount[i],
                 asset,
                 isFixed,
-                cliffWeeks,
-                vestingWeeks,
+                cliffDays,
+                vestingDays,
                 startTime
             );
         }
@@ -292,7 +305,6 @@ contract Vesting is Ownable {
      * @dev blocks withdrawing locked tokens.
      */
     function withdraw(uint256 amount, address asset) external onlyOwner {
-        IBEP20 token = IBEP20(asset);
         require(
             token.balanceOf(address(this)) - locked[asset] >= amount,
             "Vesting: Can't withdraw"
@@ -315,7 +327,7 @@ contract Vesting is Ownable {
             emit NewVesting(investors[i], amounts[i]);
         }
 
-        token.safeTransferFrom(msg.sender, address(this), totalAmount);
+        token.transfer(owner(), totalAmount);
     }
 
      /**
@@ -324,7 +336,58 @@ contract Vesting is Ownable {
      */
     function addInvestor(address investor, uint256 amount) external onlyOwner {
         vestedAmount[investor] += amount;
-        token.safeTransferFrom(msg.sender, address(this), amount);
+        token.transfer(owner(), amount);
         emit NewVesting(investor, amount);
+    }
+
+    function setTiers(
+        uint256[] calldata tierIds,
+        uint256[] calldata amountsMax
+    ) external onlyOwner {
+        uint256 _numberOfTiers = tierIds.length;
+        require(
+            amountsMax.length == _numberOfTiers,
+            "Tier: Array lengths differ"
+        );
+        for (uint256 i = 0; i < _numberOfTiers; i++) {
+            require(
+                tierIds[i] > 0 == true && amountsMax[i] > 0,
+                "Tier: invalid tier params"
+            );
+
+            tiers[i] = Tier(
+                tierIds[i],
+                amountsMax[i]
+            );
+        }
+
+        numberOfTiers = _numberOfTiers;
+    }
+
+    function setTierOfAccount(
+        address account,
+        uint256 indexOfTier
+    ) external onlyOwner {
+        require(
+            indexOfTier >= 0 && indexOfTier < numberOfTiers,
+            "Tier: index of tier is invalid"
+        );
+
+        whitelistOfTiers[account] = indexOfTier;
+    }
+
+    function gettierIdOfAccount(
+        address account
+    ) public view returns (uint256){
+        uint256 indexOfTier = whitelistOfTiers[account];
+        Tier storage _tier = tiers[indexOfTier];
+        return _tier.tierId;
+    }
+
+    function getTierAmountMaxOfAccount(
+        address account
+    ) public view returns (uint256){
+        uint256 indexOfTier = whitelistOfTiers[account];
+        return tiers[indexOfTier].amountMax;
     }
 }

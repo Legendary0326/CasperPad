@@ -6,7 +6,7 @@ export default class Footer extends Component {
         return (
             <div className="footer">
                 <div className="col-xl-10 offset-xl-1">
-                    <a>Copyright © 2021. All Rights Reserved by BSCPad</a>
+                    <a>Copyright © 2021. All Rights Reserved by CasperPad</a>
                     <span>v1.1.6</span>
                     <div>
                         <Link to="/privacypolicy">Privacy Policy</Link>

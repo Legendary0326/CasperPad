@@ -43,11 +43,11 @@ const MyModal = ({ isOpen, setIsOpen, connected }) => {
                         <>
                             <div data-bs-dismiss="modal" id="wallet-connect-metamask" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer" onClick={ handleConnectWallet }>
                                 <div className="text-white mr-auto"> Metamask</div>
-                                <img src={metamask} width="30px" className="me-2" alt="bscpad" />
+                                <img src={metamask} width="30px" className="me-2" alt="casperpad" />
                             </div>
                             <div data-bs-dismiss="modal" id="wallet-connect-binance chain wallet" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer">
                                 <div className="text-white mr-auto"> Binance Chain Wallet</div>
-                                <img src={binance} className="me-2" alt="bscpad" />
+                                <img src={binance} className="me-2" alt="casperpad" />
                             </div>
                         </>
                     )}
