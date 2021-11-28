@@ -100,101 +100,42 @@ interface IBEP20 {
  * Tracer Standard Vesting Contract
  */
 contract Vesting is Ownable {
+    mapping(address => uint256) public vestedAmount;
+    mapping(address => uint256) public claimedAmount;
 
-    //initialize data: token, member, vesting time
-    IBEP20 public token;
-    address[] public members;
-    uint256[] public amounts;
-    uint256[] public vestingTimeList;
-
-    //tiger of members
     struct Tier {
         uint256 tierId;
         uint256 amountMax;
     }
-
-    uint256 public numberOfTiers; // count of tiger
-    mapping(uint256 => Tier) public tiers; //mapping data of tier: (index => tier)
-    mapping(address => uint256) public whitelistOfTiers; //whitelist: (address => maxamount)
+    uint256 public numberOfTiers;
+    mapping(uint256 => Tier) public tiers;
+    mapping(address => uint256) public whitelistOfTiers;     
 
     struct Schedule {
-        uint256 amount;
+        uint256 totalAmount;
         uint256 claimedAmount;
-        uint256 unlockTime;
+        uint256 startTime;
+        uint256 cliffTime;
+        uint256 endTime;
         bool isFixed;
+        address asset;
     }
-
-    struct Plain {
-        uint256 percentage;
-        uint256 unlockTime;
-    }
-    Plain[] public schedulePlain; // array of plains
 
     // user => scheduleId => schedule
     mapping(address => mapping(uint256 => Schedule)) public schedules;
-    mapping(address => uint256) public numberOfSchedules; //number of the schedule by address
-    mapping(address => uint256) public locked; //locked amount mapping by address
+    mapping(address => uint256) public numberOfSchedules;
+
+    mapping(address => uint256) public locked;
+    IBEP20 public immutable token;
 
     event Claim(address indexed claimer, uint256 amount);
-    event Vest(address indexed to, uint256 amount, bool isFixed);
+    event Vest(address indexed to, uint256 amount);
     event Cancelled(address account);
 
     event NewVesting(address indexed investor, uint256 amount);
 
-    constructor(address _token) {
-        token = IBEP20(_token);
-
-        //addresses for public sale
-        members.push(address(0x0C25363022587299510774E036ad078682991256));
-        members.push(address(0x026116102Ae7e558Cd436325158d54020EFCf0eF));
-        members.push(address(0x4B674Da5E20067B8213263720d958B5e7AbD7d8c));
-        members.push(address(0xD157D2Ff5393c509777765Cf612284d53d38dE30));
-        members.push(address(0xFcf2668C4EC68D2bbd36a476e30227744A0f5EB8));
-        members.push(address(0x3719D24Fa12f32877f894c6F51FeECF91F16b44f));
-        members.push(address(0xc0eaA0018b1192dE0c8ca46E57B84Ee907e01baC));
-        members.push(address(0xc50dD8028B1C6914B67F4657F0155e5D2cE1E226));
-        members.push(address(0x5B588e36FF358D4376A76FB163fd69Da02A2A9a5));
-        members.push(address(0xA5664dC01BB8369EDc6116d3B267d6014681dD2F));
-
-        //amount for public sale
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-
-        // add schedule time
-        vestingTimeList.push(1635526800); // 2021-10-30
-        vestingTimeList.push(1638205200); // 2021-11-30
-        vestingTimeList.push(1640883600); // 2021-12-31
-        vestingTimeList.push(1643562000); // 2022-01-31
-        vestingTimeList.push(1645981200); // 2022-02-28
-        vestingTimeList.push(1648659600); // 2022-03-31
-
-        //set the schedule plain
-        for(uint256 i = 0; i < vestingTimeList.length; i++){
-            if(i == 0) { // after TGE 
-                schedulePlain.push(Plain(
-                    5, //%
-                    vestingTimeList[i]
-                ));
-            }else { // next steps
-                schedulePlain.push(Plain(
-                    19, //%
-                    vestingTimeList[i]
-                ));
-            }
-        }
-
-        //initialize the vesting schedule
-        for(uint256 i = 0; i < members.length; i++){
-            addVest(members[i], amounts[i], true);
-        }
+    constructor(IBEP20 _token) {
+        token = _token;
     }
 
     /**
@@ -203,46 +144,51 @@ contract Vesting is Ownable {
      * @param account the account that a vesting schedule is being set up for. Will be able to claim tokens after
      *                the cliff period.
      * @param amount the amount of tokens being vested for the user.
+     * @param asset the asset that the user is being vested
      * @param isFixed a flag for if the vesting schedule is fixed or not. Fixed vesting schedules can't be cancelled.
+     * @param cliffDays the number of days that the cliff will be present at.
+     * @param vestingDays the number of days the tokens will vest over (linearly)
+     * @param startTime the timestamp for when this vesting should have started
      */
-    function addVest(
+    function vest(
         address account,
         uint256 amount,
-        bool isFixed
+        address asset,
+        bool isFixed,
+        uint256 cliffDays,
+        uint256 vestingDays,
+        uint256 startTime
     ) public onlyOwner {
-        // check amount
+        // ensure cliff is shorter than vesting
         require(
+            vestingDays > 0 && 
+            vestingDays >= cliffDays &&
             amount > 0,
             "Vesting: invalid vesting params"
         );
 
-        uint256 currentLocked = locked[address(token)];
+        uint256 currentLocked = locked[asset];
 
         // require the token is present
         require(
-            IBEP20(token).balanceOf(address(this)) >= currentLocked + amount,
+            IBEP20(asset).balanceOf(address(this)) >= currentLocked + amount,
             "Vesting: Not enough tokens"
         );
 
         // create the schedule
         uint256 currentNumSchedules = numberOfSchedules[account];
-        require(currentNumSchedules == 0, "already exist user");
-        
-        for(uint256 i = 0; i < schedulePlain.length; i++){
-            uint256 _amount = amount * schedulePlain[i].percentage / 100;
-            uint256 _unlockTime = schedulePlain[i].unlockTime;
-
-            schedules[account][currentNumSchedules] = Schedule(
-                _amount,
-                0,
-                _unlockTime,
-                isFixed
-            );
-
-            numberOfSchedules[account] = currentNumSchedules + 1;
-            locked[address(token)] = currentLocked + amount;
-        }
-        emit Vest(account, amount, isFixed);
+        schedules[account][currentNumSchedules] = Schedule(
+            amount,
+            0,
+            startTime,
+            startTime + (cliffDays * 1 days),
+            startTime + (vestingDays * 1 days),
+            isFixed,
+            asset
+        );
+        numberOfSchedules[account] = currentNumSchedules + 1;
+        locked[asset] = currentLocked + amount;
+        emit Vest(account, amount);
     }
 
     /**
@@ -251,12 +197,20 @@ contract Vesting is Ownable {
      * @param accounts an array of the accounts that the vesting schedules are being set up for.
      *                 Will be able to claim tokens after the cliff period.
      * @param amount an array of the amount of tokens being vested for each user.
+     * @param asset the asset that the user is being vested
      * @param isFixed bool setting if these vesting schedules can be rugged or not.
+     * @param cliffDays the number of days that the cliff will be present at.
+     * @param vestingDays the number of days the tokens will vest over (linearly)
+     * @param startTime the timestamp for when this vesting should have started
      */
-    function addMultiVest(
+    function multiVest(
         address[] calldata accounts,
         uint256[] calldata amount,
-        bool isFixed
+        address asset,
+        bool isFixed,
+        uint256 cliffDays,
+        uint256 vestingDays,
+        uint256 startTime
     ) external onlyOwner {
         uint256 numberOfAccounts = accounts.length;
         require(
@@ -264,10 +218,14 @@ contract Vesting is Ownable {
             "Vesting: Array lengths differ"
         );
         for (uint256 i = 0; i < numberOfAccounts; i++) {
-            addVest(
+            vest(
                 accounts[i],
                 amount[i],
-                isFixed
+                asset,
+                isFixed,
+                cliffDays,
+                vestingDays,
+                startTime
             );
         }
     }
@@ -279,16 +237,26 @@ contract Vesting is Ownable {
     function claim(uint256 scheduleNumber) external {
         Schedule storage schedule = schedules[msg.sender][scheduleNumber];
         require(
-            schedule.unlockTime <= block.timestamp,
-            "Vesting: unlockTime not reached"
+            schedule.cliffTime <= block.timestamp,
+            "Vesting: cliff not reached"
         );
-        require(schedule.amount > 0, "Vesting: not claimable");
+        require(schedule.totalAmount > 0, "Vesting: not claimable");
 
-        uint256 amountToTransfer = schedule.amount - schedule.claimedAmount;
-        schedule.claimedAmount = schedule.amount; // set new claimed amount based off the curve
-        locked[address(token)] = locked[address(token)] - amountToTransfer;
-        require(IBEP20(token).transfer(msg.sender, amountToTransfer), "Vesting: transfer failed");
-        emit Claim(msg.sender, schedule.amount);
+        // Get the amount to be distributed
+        uint256 amount = calcDistribution(
+            schedule.totalAmount,
+            block.timestamp,
+            schedule.startTime,
+            schedule.endTime
+        );
+
+        // Cap the amount at the total amount
+        amount = amount > schedule.totalAmount ? schedule.totalAmount : amount;
+        uint256 amountToTransfer = amount - schedule.claimedAmount;
+        schedule.claimedAmount = amount; // set new claimed amount based off the curve
+        locked[schedule.asset] = locked[schedule.asset] - amountToTransfer;
+        require(IBEP20(schedule.asset).transfer(msg.sender, amountToTransfer), "Vesting: transfer failed");
+        emit Claim(msg.sender, amount);
     }
 
     /**
@@ -299,12 +267,12 @@ contract Vesting is Ownable {
     function rug(address account, uint256 scheduleId) external onlyOwner {
         Schedule storage schedule = schedules[account][scheduleId];
         require(!schedule.isFixed, "Vesting: Account is fixed");
-        uint256 outstandingAmount = schedule.amount -
+        uint256 outstandingAmount = schedule.totalAmount -
             schedule.claimedAmount;
         require(outstandingAmount != 0, "Vesting: no outstanding tokens");
-        schedule.amount = 0;
-        locked[address(token)] = locked[address(token)] - outstandingAmount;
-        require(IBEP20(token).transfer(owner(), outstandingAmount), "Vesting: transfer failed");
+        schedule.totalAmount = 0;
+        locked[schedule.asset] = locked[schedule.asset] - outstandingAmount;
+        require(IBEP20(schedule.asset).transfer(owner(), outstandingAmount), "Vesting: transfer failed");
         emit Cancelled(account);
     }
 
@@ -316,17 +284,60 @@ contract Vesting is Ownable {
      * @param startTime the timestamp this vesting schedule started.
      * @param endTime the timestamp this vesting schedule ends.
      */
-    
+    function calcDistribution(
+        uint256 amount,
+        uint256 currentTime,
+        uint256 startTime,
+        uint256 endTime
+    ) public pure returns (uint256) {
+        // avoid uint underflow
+        if (currentTime < startTime) {
+            return 0;
+        }
+
+        // if endTime < startTime, this will throw. Since endTime should never be
+        // less than startTime in safe operation, this is fine.
+        return (amount * (currentTime - startTime)) / (endTime - startTime);
+    }
+
     /**
      * @notice Withdraws CSPD tokens from the contract.
      * @dev blocks withdrawing locked tokens.
      */
-    function withdraw(uint256 amount) external onlyOwner {
+    function withdraw(uint256 amount, address asset) external onlyOwner {
         require(
-            token.balanceOf(address(this)) - locked[address(token)] >= amount,
+            token.balanceOf(address(this)) - locked[asset] >= amount,
             "Vesting: Can't withdraw"
         );
         require(token.transfer(owner(), amount), "Vesting: withdraw failed");
+    }
+
+     /**
+     * @notice add multi investor to vesting.
+     * @dev admin add the multi investor to vesting.
+     */
+    function addInvestors(address[] memory investors, uint256[] memory amounts) external onlyOwner {
+        uint256 totalAmount = 0;
+        uint256 length = investors.length;
+        require(amounts.length == length, "ICL");
+
+        for (uint256 i = 0; i < length; i++) {
+            vestedAmount[investors[i]] += amounts[i];
+            totalAmount += amounts[i];
+            emit NewVesting(investors[i], amounts[i]);
+        }
+
+        token.transfer(owner(), totalAmount);
+    }
+
+     /**
+     * @notice add investor to vesting.
+     * @dev admin add the investor to vesting.
+     */
+    function addInvestor(address investor, uint256 amount) external onlyOwner {
+        vestedAmount[investor] += amount;
+        token.transfer(owner(), amount);
+        emit NewVesting(investor, amount);
     }
 
     function setTiers(
@@ -365,7 +376,7 @@ contract Vesting is Ownable {
         whitelistOfTiers[account] = indexOfTier;
     }
 
-    function getTierIdOfAccount(
+    function gettierIdOfAccount(
         address account
     ) public view returns (uint256){
         uint256 indexOfTier = whitelistOfTiers[account];

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useEthers } from "@usedapp/core";
 import Modal from 'react-bootstrap/Modal';
+import {
+    Button
+} from 'react-bootstrap';
 import metamask from "../../assets/icons/metamask.svg";
 import binance from "../../assets/icons/binance.png";
 
