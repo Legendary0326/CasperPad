@@ -1100,4 +1100,29 @@ h3 {
 .round-card-header_tokenomics > h1 {
   color: var(--tertiaryColorC);
 }
+.toekn-detail-header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 10%;
+}
+.toekn-detail-header img {
+  width: 100px;
+  /* height: auto; */
+  margin-top: 25%;
+  border-radius: 50%;
+}
+.grid-box {
+  width: 100%;
+  margin-left: 0;
+  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.text-gray {
+  color: #b4b6bd;
+}
+hr {
+  background-color: #f8f8fb;
+}
 /* end of custom switch */

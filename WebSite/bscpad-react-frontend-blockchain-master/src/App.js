@@ -9,6 +9,7 @@ import Home from './pages/Home';
 import Projects from './pages/Projects';
 import Staking from './pages/Staking';
 import Error from './pages/Error';
+import Project from './pages/Project'
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
         </Route>
         <Route exact path="/projects/">
           <Projects />
+        </Route>
+        <Route path="/project/:address">
+          <Project />
         </Route>
         <Route exact path="/staking/">
           <Staking />

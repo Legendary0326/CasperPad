@@ -357,33 +357,12 @@ contract GhospTokenVesting is Context, Ownable {
         members.push(address(0xBDAae79a63F982Eb49DCFF180801313c5B9A9A4c));
 
         // add schedule time
-        vestingTimeList.push(1635526800); // 2021-10-30
-        vestingTimeList.push(1638205200); // 2021-11-30
-        vestingTimeList.push(1640883600); // 2021-12-31
-        vestingTimeList.push(1643562000); // 2022-01-31
-        vestingTimeList.push(1645981200); // 2022-02-28
-        vestingTimeList.push(1648659600); // 2022-03-31
-        vestingTimeList.push(1651251600); // 2022-04-30
-        vestingTimeList.push(1653930000); // 2022-05-31
-        vestingTimeList.push(1656522000); // 2022-06-30
-        vestingTimeList.push(1659200400); // 2022-07-31
-        vestingTimeList.push(1661878800); // 2022-08-31
-        vestingTimeList.push(1664470800); // 2022-09-30
-        vestingTimeList.push(1667149200); // 2022-10-31
-        vestingTimeList.push(1669741200); // 2022-11-30
-        vestingTimeList.push(1672419600); // 2022-12-31
-        vestingTimeList.push(1675098000); // 2023-01-31
-        vestingTimeList.push(1677517200); // 2023-02-28
-        vestingTimeList.push(1680195600); // 2023-03-31
-        vestingTimeList.push(1682787600); // 2023-04-30
-        vestingTimeList.push(1685466000); // 2023-05-31
-        vestingTimeList.push(1688058000); // 2023-06-30
-        vestingTimeList.push(1690736400); // 2023-07-31
-        vestingTimeList.push(1693414800); // 2023-08-31
-        vestingTimeList.push(1696006800); // 2023-09-30
-        vestingTimeList.push(1698685200); // 2023-10-31
-        vestingTimeList.push(1701277200); // 2023-11-30
-        vestingTimeList.push(1703955600); // 2023-12-31
+        vestingTimeList.push(1639083600); // 2021-12-10 00:00:00
+        vestingTimeList.push(1641762000); // 2022-01-10 00:00:00
+        vestingTimeList.push(1644440400); // 2022-02-10 00:00:00
+        vestingTimeList.push(1646859600); // 2022-03-10 00:00:00
+        vestingTimeList.push(1649538000); // 2022-04-10 00:00:00
+        vestingTimeList.push(1652130000); // 2022-05-10 00:00:00
 
         numberOfSchedulesList = vestingTimeList.length;
         //add schedule list

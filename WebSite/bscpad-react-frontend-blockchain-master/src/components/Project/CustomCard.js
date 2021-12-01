@@ -10,7 +10,7 @@ export default function CustomCard({ project }) {
     return (
         <section className="custom-card">
             <div className="custom-card-header">
-                <a href={"/project/" + project.contractAddress}><img src={project.picture} alt="project profile"></img></a>
+                <a href="/project"><img src={project.picture} alt="project profile"></img></a>
                 <div className="custom-card-title">
                     <strong>{project.name + '(' + 'Tier Six Private Plan' + ')'}</strong>
                     <div className="social-links">
