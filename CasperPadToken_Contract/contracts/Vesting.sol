@@ -107,6 +107,7 @@ contract Vesting is Ownable {
     uint256[] public amounts;
     uint256[] public vestingTimeList;
     uint256 releasedVestingId;
+    uint256 totalSoldAmount = 0;
     mapping(address => bool) public admins;
 
 
@@ -197,6 +198,22 @@ contract Vesting is Ownable {
         vestingTimeList.push(1649538000); // 2022-04-10 00:00:00
         vestingTimeList.push(1652130000); // 2022-05-10 00:00:00
 
+        //set the schedule plain
+        for(uint256 i = 0; i < vestingTimeList.length; i++){
+            if(i == 0) { // after TGE 
+                schedulePlain.push(Plain(
+                    5, //%
+                    vestingTimeList[i],
+                    false
+                ));
+            }else { // next steps
+                schedulePlain.push(Plain(
+                    19, //%
+                    vestingTimeList[i],
+                    false
+                ));
+            }
+        }
         //initial kWhitelist
         for(uint256 i = 0; i < members.length; i++){
             whitelistOfTiers[members[i]] = 5000000;
@@ -216,6 +233,9 @@ contract Vesting is Ownable {
         emit AddNewAdmin(_address);
     }
 
+    function getTotalSoldAmount() external view returns(uint256) {
+        return totalSoldAmount;
+    }
     /**
      * @notice Sets up a vesting schedule for a set user.
      * @dev adds a new Schedule to the schedules mapping.
@@ -254,6 +274,7 @@ contract Vesting is Ownable {
 
             numberOfSchedules[account] = currentNumSchedules + 1;
             locked[address(token)] = currentLocked + amount;
+            totalSoldAmount += amount;
         }
         members.push(account);
         emit NewVesting(account, amount, isFixed);
