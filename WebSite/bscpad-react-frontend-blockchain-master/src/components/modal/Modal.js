@@ -1,22 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useEthers } from "@usedapp/core";
 import Modal from 'react-bootstrap/Modal';
-import {
-    Button
-} from 'react-bootstrap';
+import { Toast } from 'react-bootstrap';
 import metamask from "../../assets/icons/metamask.svg";
 import binance from "../../assets/icons/binance.png";
 
-const MyModal = ({ isOpen, setIsOpen, connected }) => {
+const MyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
     const [show, setShow] = useState(isOpen);
-    const { activateBrowserWallet, account, chainId } = useEthers();
+    const [showToast, setShowToast] = useState(false);
+    const { activateBrowserWallet, deactivate, account, chainId } = useEthers();
 
     const handleClose = () => setIsOpen(false);
-    const handleShow = () => setIsOpen(true);
-    console.log('account', account)
+
+    useEffect( () => {
+        console.log('CHAIN_NAMES', account);
+        if(account && !onlyOneToast && chainId != 56){
+            setShowToast(true);
+            deactivate();
+        }
+    }, [chainId]);
 
     function handleConnectWallet(){
         activateBrowserWallet();
+        handleClose();
+    }
+
+    function handleDisconnectWallet(){
+        deactivate();
         handleClose();
     }
 
@@ -39,7 +49,7 @@ const MyModal = ({ isOpen, setIsOpen, connected }) => {
                             </div>
                             <div data-bs-dismiss="modal" id="wallet-connect-metamask" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer">
                                 <a href={"https://bscscan.com/address/" + account} target="_blank" className="text-white m-auto"> View on BSCScan </a>
-                                <a className="text-white m-auto"> Copy Address</a>
+                                <a className="text-white m-auto" onClick={ handleDisconnectWallet }> Disconnect</a>
                             </div>
                         </>
                     ) || (
@@ -58,6 +68,18 @@ const MyModal = ({ isOpen, setIsOpen, connected }) => {
             </div>
           </Modal.Body>
         </Modal>
+        <Toast onClose={() => setShowToast(false)} show={showToast} delay={7000} autohide>
+          <Toast.Header>
+            <img
+              src="holder.js/20x20?text=%20"
+              className="rounded me-2"
+              alt=""
+            />
+            <strong className="me-auto">Notice</strong>
+            <small className="mr-auto"></small>
+          </Toast.Header>
+          <Toast.Body>Your wallet must connect to the Binance Smart Chain!</Toast.Body>
+        </Toast>
       </>
     );
   }

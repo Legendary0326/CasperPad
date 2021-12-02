@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 
 import { projects } from '../../assets/variables';
-import { SiWebpack, AiFillTwitterCircle, AiOutlineMedium, FaTelegramPlane, BsCircleFill } from 'react-icons/all';
+import { BiPlus, FiPlus } from 'react-icons/all';
 import { ProgressBar } from 'react-bootstrap';
+import { Container, Row, Col, Table, Tabs, Tab } from 'react-bootstrap';
 import member_1 from '../../assets/img/team_member_1.jpg';
 
-export default function ProjectDetail() {
+export default function ProjectDetail({ contractAddress }) {
     const project = {
-        contractAddress: '0x2b42B7B53387198d3658964eE22751D47864948B',
+        contractAddress: contractAddress,
         picture: member_1,
         name: 'CSPD',
         status: 'Open',
@@ -20,53 +21,181 @@ export default function ProjectDetail() {
 
     return (
         <>
-            <h1 className="text-center font-weight-bold text-white project-title">PROJECTS OPEN NOW</h1>
-                <section className="projects">
-                    <section className="custom-card">
-                        <div className="custom-card-header">
-                            <a href="/project"><img src={project.picture} alt="project profile"></img></a>
-                            <div className="custom-card-title">
-                                <strong>{project.name + '(' + 'Tier Six Private Plan' + ')'}</strong>
-                                <div className="social-links">
-                                    <a href="https://www.google.com"><SiWebpack className="social-link" /></a>
-                                    <a href="https://www.twitter.com"><AiFillTwitterCircle className="social-link" /></a>
-                                    <a href="https://www.medium.com"><AiOutlineMedium className="social-link" /></a>
-                                    <a href="https://www.telegram.com"><FaTelegramPlane className="social-link" /></a>
-                                </div>
-                                <span className="status" style={{ backgroundColor: `${project.status === 'Coming' ? 'rgb(240 185 19 / 26%)' : project.status === 'Open' ? 'rgb(92 184 92 / 26%)' : 'rgb(255 0 0 / 25%)'}`, color: `${project.status === 'Coming' ? '#f1b90c' : project.status === 'Open' ? '#5cb85c' : 'red'}` }}>
-                                    <BsCircleFill style={{ fontSize: '.6rem', verticalAlign: 'middle' }} />
-                                    {project.status === 'Coming' ? ' Opens in TBA' : project.status === 'Open' ? ' Opened' : ' Closed'}
-                                </span>
-                                <div className="social-links">
-                                    <span className="status">USDC</span>
-                                    <span className="status">BUSD</span>
-                                </div>
+        <Container>
+            <Tabs
+                defaultActiveKey="project"
+                transition={false}
+                id="noanim-tab-example"
+                className="mb-3"
+            >
+                <Tab eventKey="project" title="Project">
+                    <Row>
+                        <Col sm={6}>
+                            <div className>
+                                <Table responsive="sm" className="text-white">
+                                    <thead>
+                                    <tr>
+                                        <th colSpan="2">Project Information</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Opens</td>
+                                        <td>{'12-10 00:00 UTC'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>FCFS Opens</td>
+                                        <td>{'12-10 00:00 UTC'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Closes</td>
+                                        <td>{'12-10 00:00 UTC'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Token Price</td>
+                                        <td>{'1 CSPD = 0.008 USD'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cap</td>
+                                        <td>{500000000 + ' CSPD'}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total Users Participated</td>
+                                        <td>{0}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total Funds Sold</td>
+                                        <td>{0}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Access Type</td>
+                                        <td>Private</td>
+                                    </tr>
+                                    </tbody>
+                                </Table>
                             </div>
-                        </div>
-                        <div className="custom-card-body">
-                            {project.message}
-                            <a href="www.google.com" style={{ color: '#6239f2', marginTop: '10px' }}>Learn more</a>
-                        </div>
-                        <div className="custom-card-footer">
-                            <div className="information">
-                                <div>Token Price<br /><span>{project.swap_rate}</span></div>
-                                <div>Cap<br /><span>{project.cap}</span></div>
-                                <div>Access<br /><span>{project.access}</span></div>
+                        </Col>
+                        <Col sm={6}>
+                            <div className>
+                                <Table responsive="sm" className="text-white">
+                                    <thead>
+                                    <tr>
+                                        <th colSpan="2">Token Information</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>CasperPad</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Token Symbol</td>
+                                        <td>CSPD</td>
+                                    </tr>
+                                    </tbody>
+                                </Table>
                             </div>
-                            <div className="custom-progress-bar">
-                                <div className="progress-title">
-                                    <span>Progress</span>
-                                    <span>Participants <span style={{ color: 'white', fontWeight: 'bold' }}>0</span></span>
-                                </div>
-                                <ProgressBar now={project.progress} variant="pro" />
-                                <div className="progress-title">
-                                    <span style={{ color: 'white', fontWeight: 'bold' }}>{project.progress}%</span>
-                                    <span style={{ color: 'white', fontWeight: 'bold' }}>0/50000000</span>
-                                </div>
+                        </Col>
+                    </Row>
+                </Tab>
+                <Tab eventKey="schedule" title="Schedule">
+                    <Row>
+                        <Col sm={6}>
+                            <div className>
+                                <Table responsive="sm" className="text-white">
+                                    <thead>
+                                        <tr>
+                                            <th>Round</th>
+                                            <th>Opens</th>
+                                            <th>Closes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>TGE</td>
+                                            <td>{'2021-12-10 00:00 UTC'}</td>
+                                            <td>{'2021-12-10 23:00 UTC'}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>First</td>
+                                            <td>{'2022-1-10 00:00 UTC'}</td>
+                                            <td>{'2022-1-10 23:00 UTC'}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Second</td>
+                                            <td>{'2022-2-10 00:00 UTC'}</td>
+                                            <td>{'2022-2-10 23:00 UTC'}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Third</td>
+                                            <td>{'2022-3-10 00:00 UTC'}</td>
+                                            <td>{'2022-3-10 23:00 UTC'}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fourth</td>
+                                            <td>{'2022-4-10 00:00 UTC'}</td>
+                                            <td>{'2022-4-10 23:00 UTC'}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Fifth</td>
+                                            <td>{'2022-5-10 00:00 UTC'}</td>
+                                            <td>{'2022-5-10 23:00 UTC'}</td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
                             </div>
-                        </div>
-                    </section>
-                </section>
+                        </Col>
+                    </Row>
+                </Tab>
+                <Tab eventKey="allocation" title="Allocation">
+                    <Row>
+                        <Col sm={9}>
+                            <div className>
+                                <Table responsive="sm" className="text-white">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Allocation</th>
+                                            <th>Percentage</th>
+                                            <th>Date</th>
+                                            <th>Claimed</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>{0.00000}</td>
+                                            <td>{5.00 + '%'}</td>
+                                            <td>After TGE</td>
+                                            <td>{0.00000}</td>
+                                            <td>
+                                                <button className="btn btn-wallet wallet-connected"> Claim Tokens </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>{0.00000}</td>
+                                            <td>{19.00 + '%'}</td>
+                                            <td>{'21-12-10 00:00' + ' to ' + '21-12-10 23:00'}</td>
+                                            <td>{0.00000}</td>
+                                            <td>
+                                                <button className="btn btn-wallet wallet-connected" disabled> Claim Tokens </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </Table>
+                            </div>
+                        </Col>
+                        <Col sm={3} className="d-flex">
+                            <div className="mx-auto my-auto">
+                                <button className="btn btn-wallet wallet-connected"> <FiPlus />Add token to MetaMask </button>
+                            </div>
+                        </Col>
+                    </Row>
+                </Tab>
+            </Tabs>
+        </Container>
         </>
     );
 }

@@ -2,6 +2,7 @@ import member_0 from './img/team_member_1.jpg';
 import member_1 from './img/team_member_2.jpg';
 import member_2 from './img/team_member_3.jpg';
 import member_3 from './img/team_member_4.jpg';
+import tokenLogo from './img/CasperPad_Logo.png';
 
 import card_0 from './img/green_1.png';
 import card_1 from './img/green_2.png';
@@ -17,7 +18,7 @@ const projects = [
     // }, {
     {
         contractAddress: '0x2b42B7B53387198d3658964eE22751D47864948B',
-        picture: member_1,
+        picture: tokenLogo,
         name: 'CSPD',
         status: 'Open',
         progress: 0,

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import MyModal from './modal/Modal';
 import { useEthers, useTokenBalance } from "@usedapp/core";
-const USDT = '0xdac17f958d2ee523a2206206994597c13d831ec7';
+const USDT = '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d';
 
 const Header =() => {
     const {account} = useEthers();
@@ -61,7 +61,7 @@ const Header =() => {
                     </ul>
                 </div>
             </nav>
-            <MyModal isOpen = { isOpen } setIsOpen = {setIsOpen} />
+            <MyModal isOpen = { isOpen } setIsOpen = {setIsOpen} onlyOneToast = {false}/>
         </section>
         </>
     );

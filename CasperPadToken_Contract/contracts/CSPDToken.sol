@@ -522,7 +522,7 @@ contract LGEWhitelisted is Context {
     }
 }
 
-contract CSPDTokenWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
+contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     
     using SafeMath for uint256;
     

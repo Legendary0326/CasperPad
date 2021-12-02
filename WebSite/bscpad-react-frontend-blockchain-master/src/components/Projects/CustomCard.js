@@ -10,7 +10,7 @@ export default function CustomCard({ project }) {
     return (
         <section className="custom-card">
             <div className="custom-card-header">
-                <a href={"/project/" + project.contractAddress}><img src={project.picture} alt="project profile"></img></a>
+                <a href={"/project/" + project.contractAddress}><img className="tokenLogo" src={project.picture} alt="project profile"></img></a>
                 <div className="custom-card-title">
                     <strong>{project.name + '(' + 'Tier Six Private Plan' + ')'}</strong>
                     <div className="social-links">
@@ -31,7 +31,7 @@ export default function CustomCard({ project }) {
             </div>
             <div className="custom-card-body">
                 {project.message}
-                <a href="www.google.com" style={{ color: '#6239f2', marginTop: '10px' }}>Learn more</a>
+                <a href={"/project/" + project.contractAddress} style={{ color: '#6239f2', marginTop: '10px' }}>Learn more</a>
             </div>
             <div className="custom-card-footer">
                 <div className="information">

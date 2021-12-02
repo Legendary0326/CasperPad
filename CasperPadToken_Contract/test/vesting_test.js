@@ -1,18 +1,18 @@
-const CasperPad = artifacts.require("CSPDTokenWhitelisted");
+const CSPDToken = artifacts.require("CSPDToken");
+const Vesting = artifacts.require("Vesting");
 
-contract("CasperPad test", async accounts => {
-  it("should put 10000 CasperPad in the first account", async () => {
-    const instance = await CasperPad.deployed();
+contract("Vesting test", async accounts => {
+  it("get the balance of vesting contract", async () => {
+    const tokenInstance = await CSPDToken.deployed();
+    const instance = await Vesting.deployed(tokenInstance);
     const balance = await instance.getBalance.call(accounts[0]);
     assert.equal(balance.valueOf(), 10000);
   });
 
   it("should call a function that depends on a linked library", async () => {
-    const meta = await CasperPad.deployed();
+    const meta = await CSPDToken.deployed();
     const outCoinBalance = await meta.getBalance.call(accounts[0]);
     const CasperPadBalance = outCoinBalance.toNumber();
-    const outCoinBalanceEth = await meta.getBalanceInEth.call(accounts[0]);
-    const CasperPadEthBalance = outCoinBalanceEth.toNumber();
     assert.equal(CasperPadEthBalance, 2 * CasperPadBalance);
   });
 

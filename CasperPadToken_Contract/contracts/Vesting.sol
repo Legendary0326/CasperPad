@@ -116,10 +116,7 @@ contract Vesting is Ownable {
         uint256 amountMax;
     }
 
-    uint256 public numberOfTiers; // count of tiger
-    mapping(uint256 => Tier) public tiers; //mapping data of tier: (index => tier)
-    // Tier[] public tiers; //mapping data of tier: (index => tier)
-    mapping(address => uint256) public whitelistOfTiers; //whitelist: (address => tierId)
+    mapping(address => uint256) public whitelistOfTiers; //whitelist: (address => maxAmount)
 
     struct Schedule {
         uint256 amount;
@@ -152,14 +149,19 @@ contract Vesting is Ownable {
     }
 
     modifier checkWhitelist(address account, uint256 amount) {
-        uint256 indexOfTier = whitelistOfTiers[account];
-        require(account != address(0x0) && tiers[indexOfTier][amountMax] != 0 && tiers[indexOfTier][amountMax] >= amount, "Invalid whitelist member!");
+        uint256 maxAmount = whitelistOfTiers[account];
+        require(maxAmount != 0 && maxAmount >= amount, "Invalid whitelist member!");
         _;
     }
 
     constructor(address _token) {
         require(_token != address(0x0));
         token = IBEP20(_token); // token address
+
+        uint256 _preSaleAmount = 50000000 * 10 ** 18; //CSPD amount for presale
+        require(IBEP20(_token).balanceOf(owner()) >= _preSaleAmount, "owner's balance is not enough");
+        // IBEP20(_token).transfer(address(this), _preSaleAmount);
+
         admins[owner()] = true;  // add owner to admin role
         releasedVestingId = 0;   // set the initial releasedVestingId
 
@@ -195,27 +197,16 @@ contract Vesting is Ownable {
         vestingTimeList.push(1649538000); // 2022-04-10 00:00:00
         vestingTimeList.push(1652130000); // 2022-05-10 00:00:00
 
-        //set the schedule plain
-        for(uint256 i = 0; i < vestingTimeList.length; i++){
-            if(i == 0) { // after TGE 
-                schedulePlain.push(Plain(
-                    5, //%
-                    vestingTimeList[i],
-                    false
-                ));
-            }else { // next steps
-                schedulePlain.push(Plain(
-                    19, //%
-                    vestingTimeList[i],
-                    false
-                ));
-            }
-        }
-
-        //initialize the vesting schedule
+        //initial kWhitelist
         for(uint256 i = 0; i < members.length; i++){
-            addVest(members[i], amounts[i], true);
+            whitelistOfTiers[members[i]] = 5000000;
         }
+    }
+
+    function totalSupply(uint256 totalAmount) external onlyAdmin {
+        uint256 _preSaleAmount = totalAmount; //CSPD amount for presale 50000000
+        require(IBEP20(token).balanceOf(owner()) >= _preSaleAmount, "owner's balance is not enough");
+        IBEP20(token).transfer(address(this), _preSaleAmount);
     }
 
     function addAdmin(address _address) external onlyOwner {
@@ -244,10 +235,7 @@ contract Vesting is Ownable {
         uint256 currentLocked = locked[address(token)];
 
         // require the token is present
-        require(
-            IBEP20(token).balanceOf(address(this)) >= currentLocked + amount,
-            "Vesting: Not enough tokens"
-        );
+        require(IBEP20(token).balanceOf(address(this)) >= currentLocked + amount, "Vesting: Not enough tokens");
 
         // create the schedule
         uint256 currentNumSchedules = numberOfSchedules[account];
@@ -355,55 +343,31 @@ contract Vesting is Ownable {
         require(token.transfer(owner(), amount), "Vesting: withdraw failed");
     }
 
-    function setTiers(
-        uint256[] calldata tierIds,
-        uint256[] calldata amountsMax
+    function multiSetTierOfAccount(
+        address[] calldata accounts,
+        uint256[] calldata _maxAmount
     ) external onlyAdmin {
-        uint256 _numberOfTiers = tierIds.length;
-        require(
-            amountsMax.length == _numberOfTiers,
-            "Tier: Array lengths differ"
-        );
-        for (uint256 i = 0; i < _numberOfTiers; i++) {
-            require(
-                tierIds[i] > 0 == true && amountsMax[i] > 0,
-                "Tier: invalid tier params"
-            );
+        uint256 _numberOfAccounts = accounts.length;
+        require( _maxAmount.length == _numberOfAccounts, "Tier: Array lengths differ");
 
-            tiers[i] = Tier(
-                tierIds[i],
-                amountsMax[i]
-            );
+        for (uint256 i = 0; i < _numberOfAccounts; i++) {
+            require( accounts[i] != address(0x0) && _maxAmount[i] > 0, "Tier: invalid tier params");
+            whitelistOfTiers[accounts[i]] = _maxAmount[i];
         }
-
-        numberOfTiers = _numberOfTiers;
     }
 
     function setTierOfAccount(
         address account,
-        uint256 indexOfTier
+        uint256 _maxAmount
     ) external onlyAdmin {
-        require(
-            indexOfTier >= 0 && indexOfTier < numberOfTiers,
-            "Tier: index of tier is invalid"
-        );
-
-        whitelistOfTiers[account] = indexOfTier;
+        require(_maxAmount > 0, "Tier: index of tier is invalid");
+        whitelistOfTiers[account] = _maxAmount;
     }
 
-    function getTierIdOfAccount(
+    function getTierOfAccount(
         address account
     ) public view returns (uint256){
-        uint256 indexOfTier = whitelistOfTiers[account];
-        Tier storage _tier = tiers[indexOfTier];
-        return _tier.tierId;
-    }
-
-    function getTierAmountMaxOfAccount(
-        address account
-    ) public view returns (uint256){
-        uint256 indexOfTier = whitelistOfTiers[account];
-        return tiers[indexOfTier].amountMax;
+        return whitelistOfTiers[account];
     }
 
     function unlockToken() external onlyAdmin {
