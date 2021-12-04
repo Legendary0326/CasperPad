@@ -1,10 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 
 import { projects } from '../../assets/variables';
 import { BiPlus, FiPlus } from 'react-icons/all';
 import { ProgressBar } from 'react-bootstrap';
 import { Container, Row, Col, Table, Tabs, Tab } from 'react-bootstrap';
 import member_1 from '../../assets/img/team_member_1.jpg';
+import { 
+    useLockedAmount,
+    useSoldAmount,
+    useVestingContractMethod, 
+    useTotalPresaleAmount,
+    useGetTierOfAccount,
+    
+    useCspdContractMethod
+} from '../../util/interact';
+import { cspdTokenAddress, busdTokenAddress } from '../../contract_ABI/vestingData';
 
 export default function ProjectDetail({ contractAddress }) {
     const project = {
@@ -14,13 +24,39 @@ export default function ProjectDetail({ contractAddress }) {
         status: 'Open',
         progress: 0,
         swap_rate: '0.008 USD',
-        cap: 50000000,
+        cap: 500000000 * 0.008,
         access: 'Private',
         message: 'CasperPad will empower crypto currency projects with the ability to distribute tokens and raise liquidity.'
     };
 
+    const { stateAddVest, send: addVest, events: getEventOfAddVest } = useVestingContractMethod("addVest");
+    function handleAddVest() {
+        addVest("0xA5664dC01BB8369EDc6116d3B267d6014681dD2F", 5000000, true);
+        console.log("events:", getEventOfAddVest);
+    }
+
+    const { stateSetTier, send: setTierOfAccount, events: getEventOfSetTier } = useVestingContractMethod("setTierOfAccount");
+    function handleSetTier() {
+        setTierOfAccount("0xbCeB94cF4579100B256eC7e5FdE4600631C3b0A5", 5000000);
+        console.log("events:", getEventOfSetTier);
+    }
+
+    const { stateAddAdmin, send: addAdmin, events: getEventAddAdmin } = useVestingContractMethod("addAdmin");
+    function handleAddAdmin() {
+        addAdmin("0xbCeB94cF4579100B256eC7e5FdE4600631C3b0A5");
+        console.log("events:", getEventAddAdmin);
+    }
+    // let lockedAmount = useLockedAmount();
+    // lockedAmount = lockedAmount ? lockedAmount.toNumber() : 0 ;
+    // console.log("lockedAmount: ", lockedAmount);
+    
+    useEffect( () => {
+        
+    }, []);
+
     return (
         <>
+        <button onClick={ handleSetTier }>test</button>
         <Container>
             <Tabs
                 defaultActiveKey="project"
@@ -41,15 +77,15 @@ export default function ProjectDetail({ contractAddress }) {
                                     <tbody>
                                     <tr>
                                         <td>Opens</td>
-                                        <td>{'12-10 00:00 UTC'}</td>
+                                        <td>{'2021-12-10 00:00 UTC'}</td>
                                     </tr>
                                     <tr>
                                         <td>FCFS Opens</td>
-                                        <td>{'12-10 00:00 UTC'}</td>
+                                        <td>{'2021-12-10 00:00 UTC'}</td>
                                     </tr>
                                     <tr>
                                         <td>Closes</td>
-                                        <td>{'12-10 00:00 UTC'}</td>
+                                        <td>{'2022-5-10 23:59 UTC'}</td>
                                     </tr>
                                     <tr>
                                         <td>Token Price</td>
@@ -57,7 +93,7 @@ export default function ProjectDetail({ contractAddress }) {
                                     </tr>
                                     <tr>
                                         <td>Cap</td>
-                                        <td>{500000000 + ' CSPD'}</td>
+                                        <td>{project.cap + ' USD'}</td>
                                     </tr>
                                     <tr>
                                         <td>Total Users Participated</td>

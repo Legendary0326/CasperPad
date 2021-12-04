@@ -108,6 +108,7 @@ contract Vesting is Ownable {
     uint256[] public vestingTimeList;
     uint256 releasedVestingId;
     uint256 totalSoldAmount = 0;
+    uint256 participants;
     mapping(address => bool) public admins;
 
 
@@ -142,6 +143,7 @@ contract Vesting is Ownable {
     event Cancelled(address account);
     event NewVesting(address indexed investor, uint256 amount, bool isFixed);
     event AddNewAdmin(address _address);
+    event RemoveAdminAddress(address _address);
     event UnlockTokens(uint256 _timestamp);
 
     modifier onlyAdmin() {
@@ -151,7 +153,7 @@ contract Vesting is Ownable {
 
     modifier checkWhitelist(address account, uint256 amount) {
         uint256 maxAmount = whitelistOfTiers[account];
-        require(maxAmount != 0 && maxAmount >= amount, "Invalid whitelist member!");
+        require(maxAmount != 0 && maxAmount >= amount * 10 ** 18, "Invalid whitelist member!");
         _;
     }
 
@@ -161,13 +163,14 @@ contract Vesting is Ownable {
 
         uint256 _preSaleAmount = 50000000 * 10 ** 18; //CSPD amount for presale
         require(IBEP20(_token).balanceOf(owner()) >= _preSaleAmount, "owner's balance is not enough");
+        participants = 0;
         // IBEP20(_token).transfer(address(this), _preSaleAmount);
 
         admins[owner()] = true;  // add owner to admin role
         releasedVestingId = 0;   // set the initial releasedVestingId
 
         //addresses for public sale
-        members.push(address(0x0C25363022587299510774E036ad078682991256));
+        members.push(address(0x5B38Da6a701c568545dCfcB03FcB875f56beddC4));
         members.push(address(0x026116102Ae7e558Cd436325158d54020EFCf0eF));
         members.push(address(0x4B674Da5E20067B8213263720d958B5e7AbD7d8c));
         members.push(address(0xD157D2Ff5393c509777765Cf612284d53d38dE30));
@@ -191,8 +194,10 @@ contract Vesting is Ownable {
         amounts.push(5000000);
 
         // add schedule time
-        vestingTimeList.push(1639083600); // 2021-12-10 00:00:00
-        vestingTimeList.push(1641762000); // 2022-01-10 00:00:00
+        vestingTimeList.push(1539083600); // 2021-12-10 00:00:00
+        vestingTimeList.push(1539083900); // 2021-12-10 00:00:00
+        // vestingTimeList.push(1639083600); // 2021-12-10 00:00:00
+        // vestingTimeList.push(1641762000); // 2022-01-10 00:00:00
         vestingTimeList.push(1644440400); // 2022-02-10 00:00:00
         vestingTimeList.push(1646859600); // 2022-03-10 00:00:00
         vestingTimeList.push(1649538000); // 2022-04-10 00:00:00
@@ -216,14 +221,14 @@ contract Vesting is Ownable {
         }
         //initial kWhitelist
         for(uint256 i = 0; i < members.length; i++){
-            whitelistOfTiers[members[i]] = 5000000;
+            whitelistOfTiers[members[i]] = 5000000 * 10 ** 18;
         }
     }
 
-    function totalSupply(uint256 totalAmount) external onlyAdmin {
-        uint256 _preSaleAmount = totalAmount; //CSPD amount for presale 50000000
+    function tokenSupply(uint256 totalAmount) external payable onlyOwner {
+        uint256 _preSaleAmount = totalAmount * 10 ** 18; //CSPD amount for presale 50000000
         require(IBEP20(token).balanceOf(owner()) >= _preSaleAmount, "owner's balance is not enough");
-        IBEP20(token).transfer(address(this), _preSaleAmount);
+        token.transfer(address(this), _preSaleAmount);
     }
 
     function addAdmin(address _address) external onlyOwner {
@@ -233,8 +238,19 @@ contract Vesting is Ownable {
         emit AddNewAdmin(_address);
     }
 
+    function removeAdmin(address _address) external onlyOwner {
+        require(_address != address(0x0), "Zero address");
+        require(admins[_address], "This address is not admin");
+        admins[_address] = false;
+        emit RemoveAdminAddress(_address);
+    }
+
     function getTotalSoldAmount() external view returns(uint256) {
         return totalSoldAmount;
+    }
+
+    function getParticipants() external view returns(uint256) {
+        return participants;
     }
     /**
      * @notice Sets up a vesting schedule for a set user.
@@ -255,28 +271,29 @@ contract Vesting is Ownable {
         uint256 currentLocked = locked[address(token)];
 
         // require the token is present
-        require(IBEP20(token).balanceOf(address(this)) >= currentLocked + amount, "Vesting: Not enough tokens");
+        require(IBEP20(token).balanceOf(address(this)) >= currentLocked + amount * 10 ** 18, "Vesting: Not enough tokens");
 
         // create the schedule
         uint256 currentNumSchedules = numberOfSchedules[account];
-        require(currentNumSchedules == 0, "already exist user");
+        require(currentNumSchedules == 0, "this account has already schedule");
         
         for(uint256 i = 0; i < schedulePlain.length; i++){
-            uint256 _amount = amount * schedulePlain[i].percentage / 100;
+            uint256 _amount = amount * 10 ** 18 * schedulePlain[i].percentage / 100;
             uint256 _unlockTime = schedulePlain[i].unlockTime;
 
-            schedules[account][currentNumSchedules] = Schedule(
+            schedules[account][i] = Schedule(
                 _amount,
                 0,
                 _unlockTime,
                 isFixed
             );
 
-            numberOfSchedules[account] = currentNumSchedules + 1;
-            locked[address(token)] = currentLocked + amount;
-            totalSoldAmount += amount;
+            numberOfSchedules[account] = i + 1;
+            locked[address(token)] = currentLocked + amount * 10 ** 18;
+            totalSoldAmount += _amount;
         }
         members.push(account);
+        participants ++;
         emit NewVesting(account, amount, isFixed);
     }
 
@@ -357,6 +374,7 @@ contract Vesting is Ownable {
      * @dev blocks withdrawing locked tokens.
      */
     function withdraw(uint256 amount) external onlyAdmin {
+        amount = amount * 10 ** 18;
         require(
             token.balanceOf(address(this)) - locked[address(token)] >= amount,
             "Vesting: Can't withdraw"
@@ -373,7 +391,7 @@ contract Vesting is Ownable {
 
         for (uint256 i = 0; i < _numberOfAccounts; i++) {
             require( accounts[i] != address(0x0) && _maxAmount[i] > 0, "Tier: invalid tier params");
-            whitelistOfTiers[accounts[i]] = _maxAmount[i];
+            whitelistOfTiers[accounts[i]] = _maxAmount[i] * 10 ** 18;
         }
     }
 
@@ -382,7 +400,7 @@ contract Vesting is Ownable {
         uint256 _maxAmount
     ) external onlyAdmin {
         require(_maxAmount > 0, "Tier: index of tier is invalid");
-        whitelistOfTiers[account] = _maxAmount;
+        whitelistOfTiers[account] = _maxAmount * 10 ** 18;
     }
 
     function getTierOfAccount(
@@ -406,6 +424,8 @@ contract Vesting is Ownable {
             if (_schedule.amount != _schedule.claimedAmount) {
                 uint256 transferAmount = _schedule.amount - _schedule.claimedAmount;
                 require(token.transfer(members[i], transferAmount));
+                locked[address(token)] -= transferAmount;
+                schedules[members[i]][releasedVestingId].claimedAmount += transferAmount;
             }
         }
         emit UnlockTokens(vestingTimeList[releasedVestingId]);

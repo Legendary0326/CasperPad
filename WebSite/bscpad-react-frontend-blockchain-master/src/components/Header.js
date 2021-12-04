@@ -6,11 +6,11 @@ import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import MyModal from './modal/Modal';
 import { useEthers, useTokenBalance } from "@usedapp/core";
-const USDT = '0x8ac76a51cc950d9822d68b83fe1ad97b32cd580d';
+const cspdToken = '0x08693D3018Ee912503B077421111632fE15B7742';
 
 const Header =() => {
     const {account} = useEthers();
-    const tokenBalance = useTokenBalance(USDT, account);
+    const tokenBalance = useTokenBalance(cspdToken, account);
 
     const [isOpen, setIsOpen] = useState(false);
     const [star, setStar] = useState(true);
@@ -40,7 +40,7 @@ const Header =() => {
                         {!account && (
                             <li><button className="btn btn-wallet wallet-default" onClick={connectWallet}> Connect Wallet </button></li>
                         ) || (
-                            <li><button className="btn btn-wallet wallet-connected" onClick={connectWallet}> { String(account).substring(0, 6) + "..." + String(account).substring(38) + " : " + tokenBalance + '  CSPD' } </button></li>
+                            <li><button className="btn btn-wallet wallet-connected" onClick={connectWallet}> { String(account).substring(0, 6) + "..." + String(account).substring(38) + " : " + tokenBalance/10**18 + '  CSPD' } </button></li>
                         )}
                         <li><Link to="/projects">Projects</Link></li>
                         <li><Link to="/staking">Staking</Link></li>

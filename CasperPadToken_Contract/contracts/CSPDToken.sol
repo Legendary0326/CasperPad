@@ -536,7 +536,7 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     string private _name;
     
     constructor() {
-        _name = "CSPD";
+        _name = "CasperPad";
         _symbol = "CSPD";
         _decimals = 18;
         _totalSupply = 500000000 * 10 ** 18;

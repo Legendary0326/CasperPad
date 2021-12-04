@@ -14,7 +14,7 @@ const MyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
 
     useEffect( () => {
         console.log('CHAIN_NAMES', account);
-        if(account && !onlyOneToast && chainId != 56){
+        if(account && !onlyOneToast && !(chainId == 56 || chainId == 97 || 1337)){
             setShowToast(true);
             deactivate();
         }

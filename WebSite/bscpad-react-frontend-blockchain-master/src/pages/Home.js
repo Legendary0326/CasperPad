@@ -8,9 +8,7 @@ import AboutUs from '../components/Home/AboutUs';
 import Tiers from '../components/Home/Tiers';
 import Tokenomics from '../components/Home/Tokenomics';
 import System from '../components/Home/System';
-import Advisors from '../components/Home/Advisors';
 import Contact from '../components/Home/Contact';
-import Particles from 'react-particles-js';
 
 export default function Home() {
 

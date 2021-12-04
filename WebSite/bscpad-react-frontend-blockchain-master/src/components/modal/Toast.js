@@ -14,16 +14,6 @@ const MyToast = ({ showToast, setShowToast}) => {
         }
     }, [account]);
 
-    function handleConnectWallet(){
-        activateBrowserWallet();
-        handleClose();
-    }
-
-    function handleDisconnectWallet(){
-        deactivate();
-        handleClose();
-    }
-
     return (
       <>
         <Toast onClose={() => setShowToast(false)} show={showToast} delay={3000} autohide>
