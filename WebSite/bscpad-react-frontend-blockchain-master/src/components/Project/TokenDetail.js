@@ -10,7 +10,7 @@ import {
     useLockedAmount,
     useSoldAmount,
     useVestingContractMethod, 
-    useTotalPresaleAmount,
+    useBalanceOfVesting,
     useGetTierOfAccount,
     
     useCspdContractMethod
@@ -34,13 +34,15 @@ export default function TokenDetail({ contractAddress }) {
     const [lockedCSPDAmount, setLockedCSPDAmount] = useState(0);
     const [remainCSPDAmount, setRemainCSPDAmount] = useState(0);
     const [totalPresaleAmount, setTotalPresaleAmount] = useState(0);
+    const [balanceOfVesting, setBalanceOfVesting] = useState(0);
     const [lockedTokenAmount, setLockedTokenAmount] = useState(0);
     const [soldAmount, setSoldAmount] = useState(0);
     const [progressValue, setProgressValue] = useState(0);
     const [tier, setTier] = useState(0);
     
     // const [ lockedAmount, setLockedAmount ] = useState(0);
-    let totalPresaleAmount_tmp = useTotalPresaleAmount();
+    const totalPresaleAmount_tmp = 50000000 * 10 ** 18;
+    let balanceOfVesting_tmp = useBalanceOfVesting();
     let lockedTokenAmount_tmp = useLockedAmount();
     let soldAmount_tmp = useSoldAmount();
     let maxAmountOfTier = useGetTierOfAccount(account);
@@ -52,7 +54,8 @@ export default function TokenDetail({ contractAddress }) {
         setLockedUSDAmount(lockedTokenAmount * 0.008);
         setRemainCSPDAmount(totalPresaleAmount - soldAmount);
         setProgressValue(soldAmount * 100 / totalPresaleAmount);
-        setTier(maxAmountOfTier ? (maxAmountOfTier/10**18).toString() : 0)
+        setTier(maxAmountOfTier ? (maxAmountOfTier/10**18).toString() : 0);
+        setBalanceOfVesting(balanceOfVesting_tmp);
 
         console.log("lockedUSDAmount: ", lockedUSDAmount);
         console.log("soldAmount: ", soldAmount);
@@ -60,7 +63,7 @@ export default function TokenDetail({ contractAddress }) {
         console.log('totalPresaleAmount:', totalPresaleAmount);
         console.log("progressValue:", progressValue);
         
-    }, [lockedTokenAmount, soldAmount, totalPresaleAmount]);
+    }, [totalPresaleAmount_tmp, lockedTokenAmount_tmp, soldAmount_tmp, maxAmountOfTier]);
 
     function connectWallet(){
         setIsOpen(true);

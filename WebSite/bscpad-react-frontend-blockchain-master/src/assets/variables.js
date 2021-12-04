@@ -6,46 +6,20 @@ import tokenLogo from './img/CasperPad_Logo.png';
 
 import card_0 from './img/green_1.png';
 import card_1 from './img/green_2.png';
+import { vestingContractAddress } from '../contract_ABI/vestingData';
 
 const projects = [
-    // {
-    //     picture: member_0,
-    //     name: 'TheForce.Trade',
-    //     status: 'Coming',
-    //     progress: 0,
-    //     swap_rate: 10,
-    //     cap: 7000, access: 'Public', message: 'A data aggregation platform that simplifies DeFi and NFT'
-    // }, {
     {
-        contractAddress: '0x2b42B7B53387198d3658964eE22751D47864948B',
+        contractAddress: vestingContractAddress,
         picture: tokenLogo,
         name: 'CSPD',
         status: 'Open',
         progress: 0,
         swap_rate: '0.008 USD',
-        cap: 50000000,
+        cap: '$' + 50000000 * 0.008,
         access: 'Private',
         message: 'CasperPad will empower crypto currency projects with the ability to distribute tokens and raise liquidity.'
     }
-    // }, {
-    //     picture: member_2,
-    //     name: 'TradeStars (Gold+)',
-    //     status: 'Open',
-    //     progress: 60,
-    //     swap_rate: 20,
-    //     cap: 3000,
-    //     access: 'Private',
-    //     message: 'First DEX for Fantasy Stocks Trading on the blockchain using Fractional NFTs + DeFi Gamification'
-    // }, {
-    //     picture: member_3,
-    //     name: 'Kryptobellion',
-    //     status: 'Closed',
-    //     progress: 100,
-    //     swap_rate: 30,
-    //     cap: 3000,
-    //     access: 'Private',
-    //     message: 'Speed Card Game Powered by NFTs & Blockchain'
-    // }
 ];
 
 const rounds = [

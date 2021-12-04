@@ -43,6 +43,26 @@ export function useGetTierOfAccount(account) {
     }) ?? [];
     return maxAmount;
 }
+
+export function useIsAdmin(account) {
+    const [isAdmin] = useContractCall({
+      abi: vestingContractInterface,
+      address: vestingContractAddress,
+      method: 'admins',
+      args: [account],
+    }) ?? [];
+    return isAdmin;
+}
+
+export function useGetSchedulePlain(index) {
+    const [percentage, unlockTime, isSent] = useContractCall({
+      abi: vestingContractInterface,
+      address: vestingContractAddress,
+      method: 'schedulePlain',
+      args: [index],
+    }) ?? [];
+    return [percentage, unlockTime, isSent];
+}
 // send transaction hook
 export function useVestingContractMethod(methodName) {
     const { state, send, events } = useContractFunction(vestingContract, methodName, {});
@@ -56,7 +76,7 @@ export function useCspdContractMethod(methodName) {
 /** the end for the vesting */
 
 /** functions for the cspd token contract */
-export function useTotalPresaleAmount() {
+export function useBalanceOfVesting() {
     const [amount] = useContractCall({
       abi: cspdContractInterface,
       address: cspdTokenAddress,

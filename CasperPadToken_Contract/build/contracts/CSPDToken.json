@@ -44997,14 +44997,103 @@
   },
   "networks": {
     "5777": {
-      "events": {},
+      "events": {
+        "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "spender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Approval",
+          "type": "event"
+        },
+        "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousOwner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newOwner",
+              "type": "address"
+            }
+          ],
+          "name": "OwnershipTransferred",
+          "type": "event"
+        },
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Transfer",
+          "type": "event"
+        },
+        "0x4e78506f3260e366dc9440ee0b4eca2d03aa91536b7605deb90e873d3fc4e5b4": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "previousWhitelister",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "newWhitelister",
+              "type": "address"
+            }
+          ],
+          "name": "WhitelisterTransferred",
+          "type": "event"
+        }
+      },
       "links": {},
-      "address": "0x08693D3018Ee912503B077421111632fE15B7742",
-      "transactionHash": "0xac66a396206ce7754bbb07b55d161faf06670448d2d582aa12934f3ac71765ca"
+      "address": "0xc9263Bd8916527c3e6089b354B84ab73d0c9f9f3",
+      "transactionHash": "0xce7ed9938a4ee627b23fe933cb22c03d8f8e2f83c17b4eaaad3c19086f5e4936"
     }
   },
   "schemaVersion": "3.4.3",
-  "updatedAt": "2021-12-03T18:01:17.213Z",
+  "updatedAt": "2021-12-04T16:12:33.086Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

@@ -104,6 +104,19 @@
       "inputs": [
         {
           "indexed": false,
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "RemoveAdminAddress",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
           "internalType": "uint256",
           "name": "_timestamp",
           "type": "uint256"
@@ -405,12 +418,19 @@
           "type": "address"
         }
       ],
-      "name": "isAdmin",
+      "name": "removeAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getTotalSoldAmount",
       "outputs": [
         {
-          "internalType": "bool",
+          "internalType": "uint256",
           "name": "",
-          "type": "bool"
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -419,7 +439,7 @@
     },
     {
       "inputs": [],
-      "name": "getTotalSoldAmount",
+      "name": "getParticipants",
       "outputs": [
         {
           "internalType": "uint256",

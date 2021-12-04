@@ -6,11 +6,11 @@ import { Link } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import MyModal from './modal/Modal';
 import { useEthers, useTokenBalance } from "@usedapp/core";
-const cspdToken = '0x08693D3018Ee912503B077421111632fE15B7742';
+import { cspdTokenAddress, busdTokenAddress } from '../contract_ABI/vestingData';
 
 const Header =() => {
     const {account} = useEthers();
-    const tokenBalance = useTokenBalance(cspdToken, account);
+    const tokenBalance = useTokenBalance(cspdTokenAddress, account);
 
     const [isOpen, setIsOpen] = useState(false);
     const [star, setStar] = useState(true);

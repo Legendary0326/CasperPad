@@ -432,4 +432,8 @@ contract Vesting is Ownable {
         schedulePlain[releasedVestingId].isSent = true;
         releasedVestingId = releasedVestingId + 1;
     }
+
+    function getSchedulePlain() external view returns(Plain [] memory) {
+        return schedulePlain;
+    }
 }
