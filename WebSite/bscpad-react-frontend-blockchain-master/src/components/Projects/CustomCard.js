@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import PropTypes from 'prop-types';
 
@@ -8,40 +8,50 @@ import {
     useSoldAmount,
     useBalanceOfVesting
 } from '../../util/interact';
+import { 
+    whitelistOfTiers,
+    preSaleAmount
+} from '../../contract_ABI/vestingData';
 
 export default function CustomCard({ project }) {
+    const unmounted = useRef(true);
     const [totalPresaleAmount, setTotalPresaleAmount] = useState(0);
     const [soldAmount, setSoldAmount] = useState(0);
     const [progressValue, setProgressValue] = useState(0);
 
-    let totalPresaleAmount_tmp = useBalanceOfVesting();
+    // let totalPresaleAmount_tmp = useBalanceOfVesting();
+    const totalPresaleAmount_tmp = preSaleAmount * 10 ** 18;
     let soldAmount_tmp = useSoldAmount();
 
-    useEffect( () => {
-        setSoldAmount(soldAmount_tmp ? (soldAmount_tmp/10**18).toString() : 0);
-        setTotalPresaleAmount(totalPresaleAmount_tmp ? (totalPresaleAmount_tmp/10**18).toString() : 0);
-        setProgressValue(soldAmount * 100 / totalPresaleAmount);
+    function handleGoDetail(projectAddress){
+        window.location = "/project/" + projectAddress;
+    }
 
-    }, [soldAmount, totalPresaleAmount]);
+    useEffect( () => {
+        setSoldAmount(soldAmount_tmp ? Number((soldAmount_tmp/10**18).toString()).toFixed(2) : 0);
+        setTotalPresaleAmount(totalPresaleAmount_tmp ? Number((totalPresaleAmount_tmp/10**18).toString()).toFixed(2) : 0);
+        setProgressValue(Number(soldAmount * 100 / totalPresaleAmount).toFixed(2));
+        return () => { unmounted.current = false }
+    }, [soldAmount, totalPresaleAmount, totalPresaleAmount_tmp]);
 
     return (
-        <section className="custom-card">
+        <section className="custom-card cursor-pointer" onClick={ () => handleGoDetail(project.contractAddress) }>
             <div className="custom-card-header">
                 <a href={"/project/" + project.contractAddress}><img className="tokenLogo" src={project.picture} alt="project profile"></img></a>
                 <div className="custom-card-title">
-                    <strong>{project.name + ' (' + 'Six Tiers & Private Plan' + ')'}</strong>
+                    <strong>{project.name + ' (' + 'Six Tiers' + ')'}</strong>
                     <div className="social-links">
-                        <a href="https://www.google.com"><SiWebpack className="social-link" /></a>
-                        <a href="https://www.twitter.com"><AiFillTwitterCircle className="social-link" /></a>
-                        <a href="https://www.medium.com"><AiOutlineMedium className="social-link" /></a>
-                        <a href="https://www.telegram.com"><FaTelegramPlane className="social-link" /></a>
+                        <a href="https://Casper-pad.com"><SiWebpack className="social-link" /></a>
+                        <a href="https://twitter.com/Casper_Pad"><AiFillTwitterCircle className="social-link" /></a>
+                        <a href="https://casperpad.medium.com"><AiOutlineMedium className="social-link" /></a>
+                        <a href=" https://t.me/CasperPadPublic"><FaTelegramPlane className="social-link" /></a>
                     </div>
                     <span className="status" style={{ backgroundColor: `${project.status === 'Coming' ? 'rgb(240 185 19 / 26%)' : project.status === 'Open' ? 'rgb(92 184 92 / 26%)' : 'rgb(255 0 0 / 25%)'}`, color: `${project.status === 'Coming' ? '#f1b90c' : project.status === 'Open' ? '#5cb85c' : 'red'}` }}>
                         <BsCircleFill style={{ fontSize: '.6rem', verticalAlign: 'middle' }} />
                         {project.status === 'Coming' ? ' Opens in TBA' : project.status === 'Open' ? ' Opened' : ' Closed'}
                     </span>
                     <div className="social-links">
-                        <span className="status">USDC</span>
+                        <span className="status">USDT</span>
                         <span className="status">BUSD</span>
                     </div>
                 </div>
@@ -59,7 +69,7 @@ export default function CustomCard({ project }) {
                 <div className="custom-progress-bar">
                     <div className="progress-title">
                         <span>Progress</span>
-                        <span>Participants <span style={{ color: 'white', fontWeight: 'bold' }}>0</span></span>
+                        <span>Participants <span style={{ color: 'white', fontWeight: 'bold' }}>{ whitelistOfTiers.length }</span></span>
                     </div>
                     <ProgressBar now={progressValue} variant="pro" />
                     <div className="progress-title">

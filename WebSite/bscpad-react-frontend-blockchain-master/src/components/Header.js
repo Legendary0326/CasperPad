@@ -31,20 +31,20 @@ const Header =() => {
         <>
         <section className="header">
             <nav className="navbar">
-                <Link to="/">
+                <a className="cursor-pointer" href="https://www.casper-pad.com/">
                     <img src={logo} alt="logo"></img>
-                    <span>CasperPad</span>
-                </Link>
+                    <span className='title'>CasperPad</span>
+                </a>
                 <div className="nav-center">
                     <ul className={isOpen ? "nav-links show-nav" : "nav-links"}>
                         {!account && (
-                            <li><button className="btn btn-wallet wallet-default" onClick={connectWallet}> Connect Wallet </button></li>
+                            <li className=" d-flex"><button className="btn btn-wallet wallet-default my-auto" onClick={connectWallet}> Connect Wallet </button></li>
                         ) || (
                             <li><button className="btn btn-wallet wallet-connected" onClick={connectWallet}> { String(account).substring(0, 6) + "..." + String(account).substring(38) + " : " + tokenBalance/10**18 + '  CSPD' } </button></li>
                         )}
-                        <li><Link to="/projects">Projects</Link></li>
-                        <li><Link to="/staking">Staking</Link></li>
-                        <li><Link to="/error">Error</Link></li>
+                        <li><a  className="btn btn-wallet wallet-default my-auto" href="https://www.casper-pad.com/">Home</a></li>
+                        {/* <li><Link to="/staking">Staking</Link></li> */}
+                        {/* <li><Link to="/error">Error</Link></li> */}
                     </ul>
                     <ul className="nav-mobile">
                         <li>

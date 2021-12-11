@@ -2,53 +2,28 @@ const CSPDToken = artifacts.require("CSPDToken");
 const Vesting = artifacts.require("Vesting");
 
 contract("Vesting test", async accounts => {
-  it("get the balance of vesting contract", async () => {
-    const tokenInstance = await CSPDToken.deployed();
-    const instance = await Vesting.deployed(tokenInstance);
-    const balance = await instance.getBalance.call(accounts[0]);
-    assert.equal(balance.valueOf(), 10000);
-  });
-
-  it("should call a function that depends on a linked library", async () => {
-    const meta = await CSPDToken.deployed();
-    const outCoinBalance = await meta.getBalance.call(accounts[0]);
-    const CasperPadBalance = outCoinBalance.toNumber();
-    assert.equal(CasperPadEthBalance, 2 * CasperPadBalance);
-  });
-
   it("should send coin correctly", async () => {
+    await deployer.deploy(CSPDToken);
+    const tokenInstance = await CSPDToken.deployed();
+    await deployer.deploy(Vesting, tokenInstance.address, accounts[5]);
+    const vestingInstance = await Vesting.deployed();
+
+    console.log('tokenInstance', tokenInstance);
+    console.log('vestingInstance', vestingInstance);
     // Get initial balances of first and second account.
-    const account_one = accounts[0];
-    const account_two = accounts[1];
-    let balance;
+    const adminAccount = accounts[0];
+    const userAccount1 = accounts[1];
+    const userAccount2 = accounts[1];
+    const treasuryWallet = accounts[5];
 
-    const amount = 10;
+    let balance = tokenInstance.balanceOf(adminAccount);
+    console.log('balance of admin', balance);
+    await tokenInstance.connect(adminAccount).transfer(vestingInstance.address, 50000000000000000000000000);
+    await tokenInstance.connect(adminAccount).transfer(userAccount1, 800000000000000000);
+    await tokenInstance.connect(adminAccount).transfer(userAccount2, 800000000000000000);
 
-    const instance = await CasperPad.deployed();
-    const meta = instance;
+    await vestingInstance.setTierOfAccount(account1, 100);
+    await vestingInstance.setTierOfAccount(account2, 100);
 
-    balance = await meta.getBalance.call(account_one);
-    const account_one_starting_balance = balance.toNumber();
-
-    balance = await meta.getBalance.call(account_two);
-    const account_two_starting_balance = balance.toNumber();
-    await meta.sendCoin(account_two, amount, { from: account_one });
-
-    balance = await meta.getBalance.call(account_one);
-    const account_one_ending_balance = balance.toNumber();
-
-    balance = await meta.getBalance.call(account_two);
-    const account_two_ending_balance = balance.toNumber();
-
-    assert.equal(
-      account_one_ending_balance,
-      account_one_starting_balance - amount,
-      "Amount wasn't correctly taken from the sender"
-    );
-    assert.equal(
-      account_two_ending_balance,
-      account_two_starting_balance + amount,
-      "Amount wasn't correctly sent to the receiver"
-    );
   });
 });

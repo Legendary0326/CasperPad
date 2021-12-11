@@ -14,8 +14,8 @@ export default function Projects() {
             <Header />
             <Background />
             <ProjectsOpen />
-            <ProjectsComing />
-            <ProjectsClosed />
+            {/* <ProjectsComing /> */}
+            {/* <ProjectsClosed /> */}
             <Footer />
         </>
     )

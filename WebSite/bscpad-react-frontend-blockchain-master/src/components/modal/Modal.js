@@ -1,11 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useEthers } from "@usedapp/core";
 import Modal from 'react-bootstrap/Modal';
 import { Toast } from 'react-bootstrap';
 import metamask from "../../assets/icons/metamask.svg";
 import binance from "../../assets/icons/binance.png";
+const trust = 'https://trustwallet.com/assets/images/media/assets/TWT.svg';
 
 const MyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
+    const unmounted = useRef(true);
     const [show, setShow] = useState(isOpen);
     const [showToast, setShowToast] = useState(false);
     const { activateBrowserWallet, deactivate, account, chainId } = useEthers();
@@ -13,11 +15,12 @@ const MyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
     const handleClose = () => setIsOpen(false);
 
     useEffect( () => {
-        console.log('CHAIN_NAMES', account);
-        if(account && !onlyOneToast && !(chainId == 56 || chainId == 97 || 1337)){
+        console.log('chainId', chainId);
+        if(account && !onlyOneToast && !(chainId == 56 || chainId == 97 || chainId == 1337)){
             setShowToast(true);
             deactivate();
         }
+        return () => { unmounted.current = false }
     }, [chainId]);
 
     function handleConnectWallet(){
@@ -58,10 +61,14 @@ const MyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
                                 <div className="text-white mr-auto"> Metamask</div>
                                 <img src={metamask} width="30px" className="me-2" alt="casperpad" />
                             </div>
-                            <div data-bs-dismiss="modal" id="wallet-connect-binance chain wallet" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer">
+                            {/* <div data-bs-dismiss="modal" id="wallet-connect-binance chain wallet" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer" onClick={ handleConnectWallet }>
                                 <div className="text-white mr-auto"> Binance Chain Wallet</div>
                                 <img src={binance} className="me-2" alt="casperpad" />
                             </div>
+                            <div data-bs-dismiss="modal" id="wallet-connect-binance chain wallet" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer" onClick={ handleConnectWallet }>
+                                <div className="text-white mr-auto"> Trust Wallet</div>
+                                <img src={trust} className="me-2 trustwallet" alt="casperpad" />
+                            </div> */}
                         </>
                     )}
                 </div>

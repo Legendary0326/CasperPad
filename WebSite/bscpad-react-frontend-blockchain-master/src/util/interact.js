@@ -1,16 +1,31 @@
 import { ethers } from 'ethers';
 import { Contract } from "@ethersproject/contracts";
-import { useEthers, useContractCall, useContractFunction } from '@usedapp/core';
+import { useContractCall, useContractFunction } from '@usedapp/core';
 
-import { cspdTokenAddress, vestingContractAddress } from '../contract_ABI/vestingData';
+import { 
+  cspdTokenAddress, 
+  vestingContractAddress, 
+  busdTokenAddress, 
+  whitelistOfTiers,
+  usdtTokenAddress 
+} from '../contract_ABI/vestingData';
+
 const vestingContractAbi = require('../contract_ABI/vesting_contract_abi.json');
 const cspdContractAbi = require('../contract_ABI/cspd_contract_abi.json');
+// const busdContractAbi = require('../contract_ABI/cspd_contract_abi.json');
+// const usdtContractAbi = require('../contract_ABI/cspd_contract_abi.json');
+const busdContractAbi = require('../contract_ABI/busd_contract_abi.json');
+const usdtContractAbi = require('../contract_ABI/usdt_contract_abi.json');
 
 const vestingContractInterface = new ethers.utils.Interface(vestingContractAbi);
 const cspdContractInterface = new ethers.utils.Interface(cspdContractAbi);
+const busdContractInterface = new ethers.utils.Interface(busdContractAbi);
+const usdtContractInterface = new ethers.utils.Interface(usdtContractAbi);
 
 const vestingContract = new Contract(vestingContractAddress, vestingContractInterface);
 const cspdContract = new Contract(cspdTokenAddress, cspdContractInterface);
+const busdContract = new Contract(busdTokenAddress, busdContractInterface);
+const usdtContract = new Contract(usdtTokenAddress, usdtContractInterface);
 
 /** functions for the vesting contract */
 //get status of contract hook
@@ -35,12 +50,13 @@ export function useSoldAmount() {
 }
 
 export function useGetTierOfAccount(account) {
-    const [maxAmount] = useContractCall({
-      abi: vestingContractInterface,
-      address: vestingContractAddress,
-      method: 'getTierOfAccount',
-      args: [account],
-    }) ?? [];
+    // const [maxAmount] = useContractCall({
+    //   abi: vestingContractInterface,
+    //   address: vestingContractAddress,
+    //   method: 'getTierOfAccount',
+    //   args: [account],
+    // }) ?? [];
+    const maxAmount = whitelistOfTiers[account];
     return maxAmount;
 }
 
@@ -63,8 +79,29 @@ export function useGetSchedulePlain(index) {
     }) ?? [];
     return [percentage, unlockTime, isSent];
 }
+
+export function useGetUserSchedulePlain(account, index) {
+  const [amount, claimedAmount, unlockTime, isFixed] = useContractCall({
+    abi: vestingContractInterface,
+    address: vestingContractAddress,
+    method: 'schedules',
+    args: [account, index],
+  }) ?? [];
+  return [amount, claimedAmount, unlockTime, isFixed];
+}
+
+export function useGetTreasuryWallet() {
+  const [treasuryAddress] = useContractCall({
+    abi: vestingContractInterface,
+    address: vestingContractAddress,
+    method: 'getTreasuryWallet',
+    args: [],
+  }) ?? [];
+  return [treasuryAddress];
+}
 // send transaction hook
 export function useVestingContractMethod(methodName) {
+    console.log('methodName', vestingContract);
     const { state, send, events } = useContractFunction(vestingContract, methodName, {});
     return { state, send, events };
 }
@@ -72,6 +109,16 @@ export function useVestingContractMethod(methodName) {
 export function useCspdContractMethod(methodName) {
     const { state, send, events } = useContractFunction(cspdContract, methodName, {});
     return { state, send, events };
+}
+
+export function useUsdtContractMethod(methodName) {
+  const { state, send, events } = useContractFunction(usdtContract, methodName, {});
+  return { state, send, events };
+}
+
+export function useBusdContractMethod(methodName) {
+  const { state, send, events } = useContractFunction(busdContract, methodName, {});
+  return { state, send, events };
 }
 /** the end for the vesting */
 

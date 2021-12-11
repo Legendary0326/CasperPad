@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useEthers } from "@usedapp/core";
 import { Toast } from 'react-bootstrap';
 
 const MyToast = ({ showToast, setShowToast}) => {
+    const unmounted = useRef(true);
     const { activateBrowserWallet, deactivate, account, chainId } = useEthers();
     const handleClose = () => setIsOpen(false);
 
@@ -12,6 +13,7 @@ const MyToast = ({ showToast, setShowToast}) => {
             setShowToast(true);
             deactivate();
         }
+        return () => { unmounted.current = false }
     }, [account]);
 
     return (

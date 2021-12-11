@@ -2,7 +2,8 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "PT sans", sans-serif;
+  /* font-family: "PT sans", sans-serif; */
+  font-family: Bw-Gradual-rg !important;
 }
 @font-face {
   font-family: fl1-shelly;
@@ -54,10 +55,17 @@
 }
 @font-face {
   font-family: Bw-Gradual-eb;
-  src: url('./assets/css/fonts/BwGradualDEMO-ExtraBold.otf') format('opentype');
+  src: url('./assets/css/fonts/Bw Gradual DEMO/BwGradualDEMO-ExtraBold.otf') format('opentype');
   font-weight: 400;
   font-style: normal;
 }
+@font-face {
+  font-family: Bw-Gradual-rg;
+  src: url('./assets/css/fonts/Bw Gradual DEMO/BwGradualDEMO-Medium.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 :root {
   /* --primary-text-color: #f1b90c; */
   --primary-text-color: #6239f2;
@@ -104,12 +112,13 @@
 }
 /* globals */
 body {
-  padding-top: 100px;
+  /* padding-top: 100px; */
   color: var(--mainBlack);
   background: #1a1a1a;
   /* font-family: Verdana, Geneva, Tahoma, sans-serif; */
   font-family: Bw-Gradual-eb !important;
   line-height: 1.4;
+  height: 100vh;
 }
 @media (max-width: 720px) {
   body { padding-top: 90px; }
@@ -230,7 +239,7 @@ button:focus { outline: none; }
 
 /* header */
 .header {
-  position: fixed;
+  /* position: fixed; */
   top: 0;
   left: 0;
   width: 100%;
@@ -239,7 +248,7 @@ button:focus { outline: none; }
 .navbar {
   width: 100%;
   /* background: linear-gradient(180deg,#4c4a44 0,#383731); */
-  background: linear-gradient(180deg,#4c4a44 0,#272831);
+  background: linear-gradient(180deg,#4c4a4459 0,#272831);
   display: flex;
   justify-content: space-between;
   padding: 10px auto;
@@ -343,16 +352,16 @@ button:focus { outline: none; }
   opacity: .4;
 }
 .projects {
-  width: 80%;
+  width: 60%;
   margin-left: 10%;
   justify-content: center;
-  display: grid;
+  /* display: grid; */
   grid-template-columns: repeat(2, 1fr);
 }
 .project-title:not(:first-of-type) { margin-top: 150px; }
 @media (max-width: 1200px) {
   .projects {
-    width: 100%;
+    /* width: 100%; */
     margin-left: 0;
   }
 }
@@ -708,7 +717,7 @@ button:focus { outline: none; }
   font-size: 13px;
 }
 .custom-progress-bar .progress {
-  height: .5rem;
+  height: 1.5rem;
   margin: .2rem 0;
 }
 /* end of custom card */
@@ -863,7 +872,8 @@ button:focus { outline: none; }
 
 /* footer */
 .footer {
-  background: linear-gradient(180deg, #4c4a44, #383731);
+  /* background: linear-gradient(180deg, #4c4a44, #383731); */
+  background: linear-gradient(180deg,#4c4a4459 0,#272831);
   display: flex;
   -webkit-box-pack: justify;
   justify-content: space-between;
@@ -1162,5 +1172,35 @@ hr {
 }
 .tokenLogo {
   background-color: white;
+}
+.tokenLogoTitle {
+  color: var(--primary-text-color);
+  font-weight: bold;
+}
+
+.toast {
+  position: absolute !important;
+  top: 62% !important;
+  right: 0% !important;
+}
+
+.trustwallet{
+  width: 7.5%;
+}
+
+.buyBtnContainer {
+  width: 100% !important;
+}
+
+.title {
+  font-family:  Bw-Gradual-eb !important;
+}
+
+#root {
+    display: flex;
+    flex-direction: column;
+    /* height: 100vh; */
+    justify-content: space-between;
+    height: 100vh;
 }
 /* end of custom switch */

@@ -1,15 +1,8 @@
 /**
- *Submitted for verification at BscScan.com on 2021-10-26
+ *Submitted for verification at BscScan.com on 2021-12-09
 */
 
-/**
- *Submitted for verification at BscScan.com on 2021-10-26
- * Verified by Ghost Ivy Team on 2021-10-26
-*/
-
-//SPDX-License-Identifier: Unlicense
-
-pragma solidity 0.8.7;
+pragma solidity ^0.8.0;
 
 interface IBEP20 {
   /**
@@ -522,7 +515,7 @@ contract LGEWhitelisted is Context {
     }
 }
 
-contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
+contract CasperPadWhitelisted is Context, IBEP20, Ownable, LGEWhitelisted {
     
     using SafeMath for uint256;
     
@@ -541,7 +534,7 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
         _decimals = 18;
         _totalSupply = 500000000 * 10 ** 18;
         _balances[_msgSender()] = _totalSupply;
-
+        
         emit Transfer(address(0), _msgSender(), _totalSupply);
     }
 
@@ -574,21 +567,21 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     }
     
     /**
-    * @dev See {CSPD-totalSupply}.
+    * @dev See {BEP20-totalSupply}.
     */
     function totalSupply() external view override returns (uint256) {
         return _totalSupply;
     }
     
     /**
-    * @dev See {CSPD-balanceOf}.
+    * @dev See {BEP20-balanceOf}.
     */
     function balanceOf(address account) external view override returns (uint256) {
         return _balances[account];
     }
     
     /**
-    * @dev See {CSPD-transfer}.
+    * @dev See {BEP20-transfer}.
     *
     * Requirements:
     *
@@ -601,14 +594,14 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     }
     
     /**
-    * @dev See {CSPD-allowance}.
+    * @dev See {BEP20-allowance}.
     */
     function allowance(address owner, address spender) external view override returns (uint256) {
         return _allowances[owner][spender];
     }
     
     /**
-    * @dev See {CSPD-approve}.
+    * @dev See {BEP20-approve}.
     *
     * Requirements:
     *
@@ -620,10 +613,10 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     }
     
     /**
-    * @dev See {CSPD-transferFrom}.
+    * @dev See {BEP20-transferFrom}.
     *
     * Emits an {Approval} event indicating the updated allowance. This is not
-    * required by the EIP. See the note at the beginning of {CSPD};
+    * required by the EIP. See the note at the beginning of {BEP20};
     *
     * Requirements:
     * - `sender` and `recipient` cannot be the zero address.
@@ -633,7 +626,7 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     */
     function transferFrom(address sender, address recipient, uint256 amount) external override returns (bool) {
         _transfer(sender, recipient, amount);
-        _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "CSPD: transfer amount exceeds allowance"));
+        _approve(sender, _msgSender(), _allowances[sender][_msgSender()].sub(amount, "BEP20: transfer amount exceeds allowance"));
         return true;
     }
     
@@ -641,7 +634,7 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     * @dev Atomically increases the allowance granted to `spender` by the caller.
     *
     * This is an alternative to {approve} that can be used as a mitigation for
-    * problems described in {CSPD-approve}.
+    * problems described in {BEP20-approve}.
     *
     * Emits an {Approval} event indicating the updated allowance.
     *
@@ -658,7 +651,7 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     * @dev Atomically decreases the allowance granted to `spender` by the caller.
     *
     * This is an alternative to {approve} that can be used as a mitigation for
-    * problems described in {CSPD-approve}.
+    * problems described in {BEP20-approve}.
     *
     * Emits an {Approval} event indicating the updated allowance.
     *
@@ -669,7 +662,7 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     * `subtractedValue`.
     */
     function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool) {
-        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].sub(subtractedValue, "CSPD: decreased allowance below zero"));
+        _approve(_msgSender(), spender, _allowances[_msgSender()][spender].sub(subtractedValue, "BEP20: decreased allowance below zero"));
         return true;
     }
     
@@ -688,12 +681,12 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     * - `sender` must have a balance of at least `amount`.
     */
     function _transfer(address sender, address recipient, uint256 amount) internal {
-        require(sender != address(0), "CSPD: transfer from the zero address");
-        require(recipient != address(0), "CSPD: transfer to the zero address");
+        require(sender != address(0), "BEP20: transfer from the zero address");
+        require(recipient != address(0), "BEP20: transfer to the zero address");
         
         _applyLGEWhitelist(sender, recipient, amount);
         
-        _balances[sender] = _balances[sender].sub(amount, "CSPD: transfer amount exceeds balance");
+        _balances[sender] = _balances[sender].sub(amount, "BEP20: transfer amount exceeds balance");
         _balances[recipient] = _balances[recipient].add(amount);
         emit Transfer(sender, recipient, amount);
     }
@@ -712,8 +705,8 @@ contract CSPDToken is Context, IBEP20, Ownable, LGEWhitelisted {
     * - `spender` cannot be the zero address.
     */
     function _approve(address owner, address spender, uint256 amount) internal {
-        require(owner != address(0), "CSPD: approve from the zero address");
-        require(spender != address(0), "CSPD: approve to the zero address");
+        require(owner != address(0), "BEP20: approve from the zero address");
+        require(spender != address(0), "BEP20: approve to the zero address");
         
         _allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);

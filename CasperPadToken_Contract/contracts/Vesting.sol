@@ -1,8 +1,92 @@
 // SPDX-License-Identifier: GPL-3.0-only
 pragma solidity 0.8.7;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+/*
+ * @dev Provides information about the current execution context, including the
+ * sender of the transaction and its data. While these are generally available
+ * via msg.sender and msg.data, they should not be accessed in such a direct
+ * manner, since when dealing with meta-transactions the account sending and
+ * paying for execution may not be the actual sender (as far as an application
+ * is concerned).
+ *
+ * This contract is only required for intermediate, library-like contracts.
+ */
+abstract contract Context {
+    function _msgSender() internal view virtual returns (address) {
+        return msg.sender;
+    }
+
+    function _msgData() internal view virtual returns (bytes calldata) {
+        this; // silence state mutability warning without generating bytecode - see https://github.com/ethereum/solidity/issues/2691
+        return msg.data;
+    }
+}
+
+// File: @openzeppelin/contracts/access/Ownable.sol
+
+/**
+ * @dev Contract module which provides a basic access control mechanism, where
+ * there is an account (an owner) that can be granted exclusive access to
+ * specific functions.
+ *
+ * By default, the owner account will be the one that deploys the contract. This
+ * can later be changed with {transferOwnership}.
+ *
+ * This module is used through inheritance. It will make available the modifier
+ * `onlyOwner`, which can be applied to your functions to restrict their use to
+ * the owner.
+ */
+abstract contract Ownable is Context {
+    address private _owner;
+
+    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+
+    /**
+     * @dev Initializes the contract setting the deployer as the initial owner.
+     */
+    constructor () {
+        address msgSender = _msgSender();
+        _owner = msgSender;
+        emit OwnershipTransferred(address(0), msgSender);
+    }
+
+    /**
+     * @dev Returns the address of the current owner.
+     */
+    function owner() public view virtual returns (address) {
+        return _owner;
+    }
+
+    /**
+     * @dev Throws if called by any account other than the owner.
+     */
+    modifier onlyOwner() {
+        require(owner() == _msgSender(), "Ownable: caller is not the owner");
+        _;
+    }
+
+    /**
+     * @dev Leaves the contract without owner. It will not be possible to call
+     * `onlyOwner` functions anymore. Can only be called by the current owner.
+     *
+     * NOTE: Renouncing ownership will leave the contract without an owner,
+     * thereby removing any functionality that is only available to the owner.
+     */
+    function renounceOwnership() public virtual onlyOwner {
+        emit OwnershipTransferred(_owner, address(0));
+        _owner = address(0);
+    }
+
+    /**
+     * @dev Transfers ownership of the contract to a new account (`newOwner`).
+     * Can only be called by the current owner.
+     */
+    function transferOwnership(address newOwner) public virtual onlyOwner {
+        require(newOwner != address(0), "Ownable: new owner is the zero address");
+        emit OwnershipTransferred(_owner, newOwner);
+        _owner = newOwner;
+    }
+}
 
 interface IBEP20 {
     
@@ -103,12 +187,11 @@ contract Vesting is Ownable {
 
     //initialize data: token, member, vesting time
     IBEP20 public token;
+    address treasuryWallet;
     address[] public members;
-    uint256[] public amounts;
     uint256[] public vestingTimeList;
     uint256 releasedVestingId;
     uint256 totalSoldAmount = 0;
-    uint256 participants;
     mapping(address => bool) public admins;
 
 
@@ -145,6 +228,7 @@ contract Vesting is Ownable {
     event AddNewAdmin(address _address);
     event RemoveAdminAddress(address _address);
     event UnlockTokens(uint256 _timestamp);
+    event UpdateTreasuryWallet(address _treasuryWallet);
 
     modifier onlyAdmin() {
         require(_msgSender() != address(0x0) && admins[_msgSender()], "Caller is not the admin");
@@ -157,51 +241,20 @@ contract Vesting is Ownable {
         _;
     }
 
-    constructor(address _token) {
-        require(_token != address(0x0));
-        token = IBEP20(_token); // token address
-
-        uint256 _preSaleAmount = 50000000 * 10 ** 18; //CSPD amount for presale
-        require(IBEP20(_token).balanceOf(owner()) >= _preSaleAmount, "owner's balance is not enough");
-        participants = 0;
-        // IBEP20(_token).transfer(address(this), _preSaleAmount);
+    constructor() {
+        token = IBEP20(address(0xef9481115ff33E94d3E28A52D3A8F642bf3521e5)); // token address
+        treasuryWallet = address(0x7621B2c41eC4DF9BaAA32D7BdD48144442B2C8a7); //treasury wallet address
 
         admins[owner()] = true;  // add owner to admin role
         releasedVestingId = 0;   // set the initial releasedVestingId
 
-        //addresses for public sale
-        members.push(address(0x5B38Da6a701c568545dCfcB03FcB875f56beddC4));
-        members.push(address(0x026116102Ae7e558Cd436325158d54020EFCf0eF));
-        members.push(address(0x4B674Da5E20067B8213263720d958B5e7AbD7d8c));
-        members.push(address(0xD157D2Ff5393c509777765Cf612284d53d38dE30));
-        members.push(address(0xFcf2668C4EC68D2bbd36a476e30227744A0f5EB8));
-        members.push(address(0x3719D24Fa12f32877f894c6F51FeECF91F16b44f));
-        members.push(address(0xc0eaA0018b1192dE0c8ca46E57B84Ee907e01baC));
-        members.push(address(0xc50dD8028B1C6914B67F4657F0155e5D2cE1E226));
-        members.push(address(0x5B588e36FF358D4376A76FB163fd69Da02A2A9a5));
-        members.push(address(0xA5664dC01BB8369EDc6116d3B267d6014681dD2F));
-
-        //amount for public sale
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-        amounts.push(5000000);
-
         // add schedule time
-        vestingTimeList.push(1539083600); // 2021-12-10 00:00:00
-        vestingTimeList.push(1539083900); // 2021-12-10 00:00:00
-        // vestingTimeList.push(1639083600); // 2021-12-10 00:00:00
-        // vestingTimeList.push(1641762000); // 2022-01-10 00:00:00
-        vestingTimeList.push(1644440400); // 2022-02-10 00:00:00
-        vestingTimeList.push(1646859600); // 2022-03-10 00:00:00
-        vestingTimeList.push(1649538000); // 2022-04-10 00:00:00
-        vestingTimeList.push(1652130000); // 2022-05-10 00:00:00
+        vestingTimeList.push(1639162800); // Dec 10 2021 07:00PM
+        vestingTimeList.push(1641841200); // Jan 10 2022 07:00PM
+        vestingTimeList.push(1644519600); // Feb 10 2022 07:00PM
+        vestingTimeList.push(1646938800); // Mar 10 2022 07:00PM
+        vestingTimeList.push(1649617200); // Apr 10 2022 07:00PM
+        vestingTimeList.push(1652209200); // May 10 2022 07:00PM
 
         //set the schedule plain
         for(uint256 i = 0; i < vestingTimeList.length; i++){
@@ -219,16 +272,8 @@ contract Vesting is Ownable {
                 ));
             }
         }
-        //initial kWhitelist
-        for(uint256 i = 0; i < members.length; i++){
-            whitelistOfTiers[members[i]] = 5000000 * 10 ** 18;
-        }
-    }
 
-    function tokenSupply(uint256 totalAmount) external payable onlyOwner {
-        uint256 _preSaleAmount = totalAmount * 10 ** 18; //CSPD amount for presale 50000000
-        require(IBEP20(token).balanceOf(owner()) >= _preSaleAmount, "owner's balance is not enough");
-        token.transfer(address(this), _preSaleAmount);
+        whitelistOfTiers[owner()] = 87500000 * 10 ** 18;
     }
 
     function addAdmin(address _address) external onlyOwner {
@@ -250,23 +295,34 @@ contract Vesting is Ownable {
     }
 
     function getParticipants() external view returns(uint256) {
-        return participants;
+        return members.length;
     }
+
+    function setTreasuryWallet(address _treasuryWallet) external onlyAdmin {
+        treasuryWallet = _treasuryWallet;
+        emit UpdateTreasuryWallet(_treasuryWallet);
+    }
+
+    function getTreasuryWallet() external view returns(address) {
+        return treasuryWallet;
+    }
+
     /**
      * @notice Sets up a vesting schedule for a set user.
      * @dev adds a new Schedule to the schedules mapping.
-     * @param account the account that a vesting schedule is being set up for. Will be able to claim tokens after
-     *                the cliff period.
      * @param amount the amount of tokens being vested for the user.
      * @param isFixed a flag for if the vesting schedule is fixed or not. Fixed vesting schedules can't be cancelled.
      */
     function addVest(
-        address account,
         uint256 amount,
-        bool isFixed
-    ) public onlyAdmin checkWhitelist(account, amount) {
+        bool isFixed,
+        address payCurrency
+    ) public payable {
         // check amount
-        require(amount > 0, "Vesting: invalid vesting params");
+        uint256 usdAmountToBuyToken = amount * (10 ** 18) * 8 / 1000;
+        require(amount > 0, "Vesting: cspd token amount parameter is invalid");
+        require(payCurrency != address(0x0), "vesting: currency address in invalid");
+        require(IBEP20(payCurrency).balanceOf(msg.sender) >= usdAmountToBuyToken, "Vesting: currency token amount is not enough");
 
         uint256 currentLocked = locked[address(token)];
 
@@ -274,54 +330,27 @@ contract Vesting is Ownable {
         require(IBEP20(token).balanceOf(address(this)) >= currentLocked + amount * 10 ** 18, "Vesting: Not enough tokens");
 
         // create the schedule
-        uint256 currentNumSchedules = numberOfSchedules[account];
+        uint256 currentNumSchedules = numberOfSchedules[msg.sender];
         require(currentNumSchedules == 0, "this account has already schedule");
         
         for(uint256 i = 0; i < schedulePlain.length; i++){
-            uint256 _amount = amount * 10 ** 18 * schedulePlain[i].percentage / 100;
+            uint256 _amount = amount * (10 ** 18) * schedulePlain[i].percentage / 100;
             uint256 _unlockTime = schedulePlain[i].unlockTime;
 
-            schedules[account][i] = Schedule(
+            schedules[msg.sender][i] = Schedule(
                 _amount,
                 0,
                 _unlockTime,
                 isFixed
             );
 
-            numberOfSchedules[account] = i + 1;
+            numberOfSchedules[msg.sender] = i + 1;
             locked[address(token)] = currentLocked + amount * 10 ** 18;
             totalSoldAmount += _amount;
         }
-        members.push(account);
-        participants ++;
-        emit NewVesting(account, amount, isFixed);
-    }
-
-    /**
-     * @notice Sets up vesting schedules for multiple users within 1 transaction.
-     * @dev adds a new Schedule to the schedules mapping.
-     * @param accounts an array of the accounts that the vesting schedules are being set up for.
-     *                 Will be able to claim tokens after the cliff period.
-     * @param amount an array of the amount of tokens being vested for each user.
-     * @param isFixed bool setting if these vesting schedules can be rugged or not.
-     */
-    function addMultiVest(
-        address[] calldata accounts,
-        uint256[] calldata amount,
-        bool isFixed
-    ) external onlyAdmin {
-        uint256 numberOfAccounts = accounts.length;
-        require(
-            amount.length == numberOfAccounts,
-            "Vesting: Array lengths differ"
-        );
-        for (uint256 i = 0; i < numberOfAccounts; i++) {
-            addVest(
-                accounts[i],
-                amount[i],
-                isFixed
-            );
-        }
+        members.push(msg.sender);
+        IBEP20(payCurrency).transferFrom(msg.sender, address(treasuryWallet), usdAmountToBuyToken);
+        emit NewVesting(msg.sender, amount, isFixed);
     }
 
     /**

@@ -16,8 +16,8 @@ const projects = [
         status: 'Open',
         progress: 0,
         swap_rate: '0.008 USD',
-        cap: '$' + 50000000 * 0.008,
-        access: 'Private',
+        cap: '$' + 87500000 * 0.008,
+        access: 'Public',
         message: 'CasperPad will empower crypto currency projects with the ability to distribute tokens and raise liquidity.'
     }
 ];
