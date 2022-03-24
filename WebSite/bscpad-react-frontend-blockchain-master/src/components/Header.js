@@ -40,7 +40,7 @@ const Header =() => {
                         {!account && (
                             <li className=" d-flex"><button className="btn btn-wallet wallet-default my-auto" onClick={connectWallet}> Connect Wallet </button></li>
                         ) || (
-                            <li><button className="btn btn-wallet wallet-connected" onClick={connectWallet}> { String(account).substring(0, 6) + "..." + String(account).substring(38) + " : " + tokenBalance/10**18 + '  CSPD' } </button></li>
+                            <li><button className="btn btn-wallet wallet-connected" onClick={connectWallet}> { String(account).substring(0, 6) + "..." + String(account).substring(38) + " : " + Number(tokenBalance/10**18).toFixed(5) + '  CSPD' } </button></li>
                         )}
                         <li><a  className="btn btn-wallet wallet-default my-auto" href="https://www.casper-pad.com/">Home</a></li>
                         {/* <li><Link to="/staking">Staking</Link></li> */}

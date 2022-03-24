@@ -10,16 +10,16 @@ import {
     busdTokenAddress, 
     usdtTokenAddress, 
     whitelistOfTiers 
-} from '../../contract_ABI/vestingData';
+} from '../../contract_ABI/vestingDataNew';
 import { 
     useGetTierOfAccount,
     useCspdContractMethod,
     useVestingContractMethod,
     useUsdtContractMethod,
     useBusdContractMethod
-} from '../../util/interact';
+} from '../../util/interactNew';
 
-const BuyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
+const BuyModalNew = ({ isOpen, setIsOpen, onlyOneToast}) => {
     const unmounted = useRef(true);
     const [isOpenBuy, setIsOpenBuy] = useState(false);
     const [showToastBuy, setShowToastBuy] = useState(false);
@@ -40,8 +40,6 @@ const BuyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
 
     useEffect( () => {
         setBuyCspdAmount(Number(buyUsdAmount * 1000 / 8).toFixed(3));
-        setTier(maxAmountOfTier ? Number((maxAmountOfTier*0.008)).toFixed(3) : 0);
-        setPayCurrency(usdtTokenAddress);
         return () => { unmounted.current = false }
     }, [ buyUsdAmount]);
 
@@ -53,9 +51,11 @@ const BuyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
     const { state: stateApproveUsdt, send: approveUsdt, events: getEventApproveUsdt } = useUsdtContractMethod("approve");
     const { state: stateApproveBusd, send: approveBusd, events: getEventApproveBusd } = useBusdContractMethod("approve");
     function handleApprove() {
-        console.log('tier amount:', tier);
-        console.log('approve amount:', buyUsdAmount);
-        if(buyUsdAmount > tier){
+        var tmp_tier = parseFloat(tier);
+        var tmp_buyUsdAmount = parseFloat(buyUsdAmount);
+        console.log('tier amount:', tmp_tier, typeof tmp_tier);
+        console.log('approve amount:', tmp_buyUsdAmount, typeof tmp_buyUsdAmount);
+        if(tmp_buyUsdAmount > tmp_tier){
             handleClose();
             setToastTextBuy("Your amount is more than your tier of whitelist!");
             setShowToastBuy(true);
@@ -166,7 +166,7 @@ const BuyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
                                     </Form>
                                 </div>
                                 <div>
-                                    <input className='form-control' type="number" step="0.1" max={ tier }  value={ buyUsdAmount } onChange={e => setBuyUsdAmount(e.target.value)} />
+                                    <input className='form-control' type="number" step="0.01" max={ tier }  value={ buyUsdAmount } onChange={e => setBuyUsdAmount(e.target.value)} />
                                 </div>
                             </div>
                             <div data-bs-dismiss="modal" id="wallet-connect-metamask" className="c-list border-b px-3 py-2 d-flex align-items-center">
@@ -226,4 +226,4 @@ const BuyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
     );
   }
   
-  export default BuyModal;
+  export default BuyModalNew;

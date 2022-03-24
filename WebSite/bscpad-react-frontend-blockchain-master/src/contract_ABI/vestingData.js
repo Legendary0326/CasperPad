@@ -19,11 +19,17 @@ const busdTokenAddress = '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56';
 const usdtTokenAddress = '0x55d398326f99059fF775485246999027B3197955';
 /** - end -*/
 
-const preSaleAmount = 87500000;
-const saleStartTime = 1639137600;
-const saleEndTime = 1639164600;
+// const preSaleAmount = 87500000;
+const preSaleAmount = 84957543;
+const saleStartTime = 1639910800;
+const saleEndTime = 1640509200;
 
 let whitelistOfTiers = [];
+whitelistOfTiers['0x3cbabFddC6F5Dba395d151339B36E6E8b7E096a1'] = 55313;
+whitelistOfTiers['0x6050e98aA1B1c167F649A6C1814Bf2FAED265767'] = 14717;
+whitelistOfTiers['0x4C5EA4E08416cE60fa3016d26c9Ffb71fbdB9f30'] = 1250;
+whitelistOfTiers['0xf75E2B678d2BED382CFdf6E09abce77Cf5E262fB'] = 1250;//testwallet
+
 whitelistOfTiers['0x25ACefe018611B3648A8B960885622D6f6430BFF'] = 8618 ;
 whitelistOfTiers['0x551Cf4B34c19A57Db895770D1d4D14C2Cf3bD2Ac'] = 8618 ;
 whitelistOfTiers['0xB8166476D9a2A43B06492DCb9390dE89C9f50273'] = 8618 ;
@@ -4335,7 +4341,9 @@ whitelistOfTiers['0xF43d88E84C40f4b6212698227E05979Bb0B29e62'] = 55313;
 whitelistOfTiers['0x3000CCfEE3841a6DE8f82AcF4Ff8e2C6ada7Cdcd'] = 55313; //admin
 whitelistOfTiers['0x84A96D0497120ef9A432Ae865A6c2a60E87D3596'] = 13246;
 whitelistOfTiers['0x507ff15e8bAB6Fb148Cf2C4E71963ecC357f25D4'] = 14717;
+whitelistOfTiers['0x8293158760CAaB8f5a85b5089A9255D07C271A95'] = 14717;
 whitelistOfTiers['0x6050e98aA1B1c167F649A6C1814Bf2FAED265767'] = 87500000;
+
 
 const schedulePlain = [
     {
@@ -4370,4 +4378,4 @@ const whitelistOfTiersLength = 4803;
 
 
 
-export { cspdTokenAddress, vestingContractAddress, whitelistOfTiers, busdTokenAddress, usdtTokenAddress, schedulePlain, preSaleAmount, whitelistOfTiersLength, saleStartTime, saleEndTime };
+export { cspdTokenAddress, vestingContractAddress, busdTokenAddress, usdtTokenAddress, schedulePlain, preSaleAmount, whitelistOfTiersLength, saleStartTime, saleEndTime, whitelistOfTiers };

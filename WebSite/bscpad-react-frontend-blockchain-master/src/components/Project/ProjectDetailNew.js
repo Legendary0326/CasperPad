@@ -10,18 +10,17 @@ import {
     useVestingContractMethod, 
     useBalanceOfVesting,
     useGetUserSchedulePlain,
-    useGetParticipants,
     useGetTreasuryWallet,
     useCspdContractMethod
-} from '../../util/interact';
+} from '../../util/interactNew';
 import { 
     vestingContractAddress, 
     whitelistOfTiers,
     whitelistOfTiersLength
-} from '../../contract_ABI/vestingData';
-import { schedulePlain, preSaleAmount } from '../../contract_ABI/vestingData';
+} from '../../contract_ABI/vestingDataNew';
+import { schedulePlain, preSaleAmount } from '../../contract_ABI/vestingDataNew';
 
-export default function ProjectDetail() {
+export default function ProjectDetailNew() {
     const limitPresaleAmount = preSaleAmount;
     const unmounted = useRef(true);
     const project = {
@@ -31,7 +30,7 @@ export default function ProjectDetail() {
         status: 'Open',
         progress: 0,
         swap_rate: '0.008 USD',
-        cap: 87500000  * 0.008,
+        cap: 11315944  * 0.008,
         access: 'Private',
         message: 'CasperPad will empower crypto currency projects with the ability to distribute tokens and raise liquidity.'
     };
@@ -51,13 +50,11 @@ export default function ProjectDetail() {
     const [ amount2, claimedAmount2, unlockTime2, isFixed2 ] = useGetUserSchedulePlain(account, 2);
     const [ amount3, claimedAmount3, unlockTime3, isFixed3 ] = useGetUserSchedulePlain(account, 3);
     const [ amount4, claimedAmount4, unlockTime4, isFixed4 ] = useGetUserSchedulePlain(account, 4);
-    const [ amount5, claimedAmount5, unlockTime5, isFixed5 ] = useGetUserSchedulePlain(account, 5);
     isScheduleLocked.push(claimedAmount0);
     isScheduleLocked.push(claimedAmount1);
     isScheduleLocked.push(claimedAmount2);
     isScheduleLocked.push(claimedAmount3);
     isScheduleLocked.push(claimedAmount4);
-    isScheduleLocked.push(claimedAmount5);
     console.log('isScheduleLockedsssssssssssssss', isScheduleLocked,  unlockTime0 );
 
     const { state: stateAddVest, send: addVest, events: getEventOfAddVest } = useVestingContractMethod("addVest");
@@ -74,10 +71,11 @@ export default function ProjectDetail() {
 
     const { state: SetTreasuryWallet, send: setTreasuryWallet, events: getEventOfSetTreasuryWallet } = useVestingContractMethod("setTreasuryWallet");
     let treasuryWallet = useGetTreasuryWallet();
+    const [ amount_t, claimedAmount_t, unlockTime_t, isFixed_t ] = useGetUserSchedulePlain ('0x7e6daf98f514599745b2ef2a5740ddce0446485d', 0);
     function handleSetTreasuryWallet() {
         
         // setTreasuryWallet("0x3879a6a9f41E4B2f2F6F1643f72a5c244a69c180");
-        console.log("treasuryWallet:", treasuryWallet);
+        console.log("events:", amount_t);
     }
 
     const { state: stateAddAdmin, send: addAdmin, events: getEventAddAdmin } = useVestingContractMethod("addAdmin");
@@ -101,7 +99,7 @@ export default function ProjectDetail() {
     let totalPresaleAmount_tmp = useBalanceOfVesting();
     const { state: stateDeposit, send: transfer, events: getEventDeposit } = useCspdContractMethod("transfer");
     function handleDeposite() {
-        if(limitPresaleAmount > totalPresaleAmount && !isScheduleLocked[0]) {
+        if(limitPresaleAmount > totalPresaleAmount) {
             let amount = (limitPresaleAmount - totalPresaleAmount).toString() + '000000000000000000';
             console.log('amount', amount);
             transfer(vestingContractAddress, amount);
@@ -113,7 +111,7 @@ export default function ProjectDetail() {
 
     const { state: stateWithdraw, send: withdraw, events: getEventWithdraw } = useVestingContractMethod("withdraw");
     function handleWithdraw() {
-        withdraw('2542462');
+        withdraw('5788880');
     }
 
     const { state: stateTransferOwnersihp, send: transferOwnership, events: getEventTransferOwnership } = useVestingContractMethod("transferOwnership");
@@ -141,18 +139,9 @@ export default function ProjectDetail() {
         return () => { unmounted.current = false }
     }, [isAdmin_tmp, totalPresaleAmount_tmp]);
 
-    const [ testamount1, testclaimedAmount1, testunlockTime1, testisFixed1 ] = useGetUserSchedulePlain('0x9d8ae6499568552C1902FC8DB1012905265D485B', 2);
-    function getSchedule(){
-        console.log('address', '0x9d8ae6499568552C1902FC8DB1012905265D485B')
-        console.log('scheduleAmount', testamount1)
-        console.log('scheduleClaimedAmount1', testclaimedAmount1)
-        console.log('scheduleUnlockTime1', testunlockTime1)
-        console.log('scheduleIsFixed1', testisFixed1)
-    }
-
     return (
         <>
-        <button onClick={ getSchedule }>test</button>
+        {/* <button onClick={ handleTransferOwnership }>test</button> */}
         <Toast onClose={() => setShowToast(false)} show={showToast} delay={7000} autohide>
           <Toast.Header>
             <img
@@ -185,7 +174,7 @@ export default function ProjectDetail() {
                                     <tbody>
                                         <tr>
                                             <td>Opens</td>
-                                            <td>{'2021-12-10 12:00 UTC'}</td>
+                                            <td>{'2021-12-20 9:00 UTC'}</td>
                                         </tr>
                                         <tr>
                                             <td>Token Price</td>
@@ -244,11 +233,6 @@ export default function ProjectDetail() {
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>TGE</td>
-                                            <td>{'2021-12-10 19:00 UTC'}</td>
-                                            <td>{'2021-12-10 23:00 UTC'}</td>
-                                        </tr>
-                                        <tr>
                                             <td>First</td>
                                             <td>{'2022-1-10 19:00 UTC'}</td>
                                             <td>{'2022-1-10 23:00 UTC'}</td>
@@ -299,16 +283,14 @@ export default function ProjectDetail() {
                                             schedulePlain.map((plain, index) => {
                                                 return (
                                                 <tr>
-                                                    <td>{index+1}</td>
-                                                    <td>{limitPresaleAmount * plain.percentage / 100}</td>
+                                                    <td>{index + 1}</td>
+                                                    <td>{Number(limitPresaleAmount * plain.percentage / 100).toFixed(5)}</td>
                                                     <td>{plain.percentage + '%'}</td>
-                                                    <td>{index == 0 ? 'After TGE (' + new Date(plain.unlockTime * 1000).toLocaleString("en-US", {timeZone: "UTC"}) +')' : new Date(plain.unlockTime * 1000).toLocaleString("en-US", {timeZone: "UTC"})}</td>
+                                                    <td>{new Date(plain.unlockTime * 1000).toLocaleString("en-US", {timeZone: "UTC"})}</td>
                                                     <td>{currentTime >= plain.unlockTime ? limitPresaleAmount * plain.percentage / 100 : 0}</td>
                                                     <td>
                                                         {(currentTime >= plain.unlockTime && !isAdmin && isScheduleLocked[index] == 0 && whitelistOfTiers[account]) && (
                                                             <>
-                                                            {/* <button className="btn btn-wallet wallet-connected" onClick={ handleUnlockToken }> Claim </button> */}
-
                                                             <button className="btn btn-wallet wallet-connected" onClick={ () => handleClaim(index) }> Claim </button>
                                                             </>
                                                         ) || (currentTime >= plain.unlockTime) && (

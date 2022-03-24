@@ -4,28 +4,62 @@ import Modal from 'react-bootstrap/Modal';
 import { Toast } from 'react-bootstrap';
 import metamask from "../../assets/icons/metamask.svg";
 import binance from "../../assets/icons/binance.png";
+import walletconnect_img from '../../assets/icons/walletconnect.png';
+import {
+  useWeb3React
+} from "@web3-react/core";
+import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
+
 const trust = 'https://trustwallet.com/assets/images/media/assets/TWT.svg';
 
 const MyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
+  ///////////////////trust-wallet////////////////////////
+  // const context = useWeb3React();
+  const {
+    connector,
+    library,
+    account: accountConnect,
+    chainId: chainIdConnect,
+    activate,
+    active,
+    error
+  } = useWeb3React();
+  ///////////////////end-trust-wallet////////////////////
     const unmounted = useRef(true);
     const [show, setShow] = useState(isOpen);
     const [showToast, setShowToast] = useState(false);
     const { activateBrowserWallet, deactivate, account, chainId } = useEthers();
-
     const handleClose = () => setIsOpen(false);
+    const walletconnect = new WalletConnectConnector({
+      rpc: { 56: "https://bsc-dataseed.binance.org/" },
+      bridge: "https://bridge.walletconnect.org",
+      qrcode: true,
+      pollingInterval: 12000
+    });
 
     useEffect( () => {
-        console.log('chainId', chainId);
+        console.log('accountConnect', accountConnect);
+        if(accountConnect){ //trustwallet
+          account = accountConnect;
+          console.log('chainId', chainId);
+        }
+        if(chainIdConnect) //trustwallet
+          chainId = chainIdConnect;
+        
         if(account && !onlyOneToast && !(chainId == 56 || chainId == 97 || chainId == 1337)){
             setShowToast(true);
             deactivate();
         }
         return () => { unmounted.current = false }
-    }, [chainId]);
+    }, [accountConnect, chainId, chainIdConnect, active]);
 
-    function handleConnectWallet(){
+    function handleConnectWalletMeta(){
         activateBrowserWallet();
         handleClose();
+    }
+
+    function handleConnectWalletTrust() {
+      activate(walletconnect);
     }
 
     function handleDisconnectWallet(){
@@ -48,7 +82,7 @@ const MyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
                     {account && (
                         <>
                             <div data-bs-dismiss="modal" id="wallet-connect-metamask" className="c-list border-b px-3 py-2 d-flex align-items-center">
-                                <div className="text-white m-auto"> {account}</div>
+                                <div className="text-white col-12 m-auto"> <span style={{wordBreak: 'break-all'}}>{account}</span></div>
                             </div>
                             <div data-bs-dismiss="modal" id="wallet-connect-metamask" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer">
                                 <a href={"https://bscscan.com/address/" + account} target="_blank" className="text-white m-auto"> View on BSCScan </a>
@@ -57,17 +91,17 @@ const MyModal = ({ isOpen, setIsOpen, onlyOneToast}) => {
                         </>
                     ) || (
                         <>
-                            <div data-bs-dismiss="modal" id="wallet-connect-metamask" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer" onClick={ handleConnectWallet }>
-                                <div className="text-white mr-auto"> Metamask</div>
+                            <div data-bs-dismiss="modal" id="wallet-connect-metamask" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer" onClick={ handleConnectWalletMeta }>
+                                <div className="text-white mr-auto"> MetaMask</div>
                                 <img src={metamask} width="30px" className="me-2" alt="casperpad" />
                             </div>
-                            {/* <div data-bs-dismiss="modal" id="wallet-connect-binance chain wallet" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer" onClick={ handleConnectWallet }>
+                            {/* <div data-bs-dismiss="modal" id="wallet-connect-binance chain wallet" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer" onClick={ handleConnectWalletMeta }>
                                 <div className="text-white mr-auto"> Binance Chain Wallet</div>
                                 <img src={binance} className="me-2" alt="casperpad" />
-                            </div>
-                            <div data-bs-dismiss="modal" id="wallet-connect-binance chain wallet" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer" onClick={ handleConnectWallet }>
-                                <div className="text-white mr-auto"> Trust Wallet</div>
-                                <img src={trust} className="me-2 trustwallet" alt="casperpad" />
+                            </div> */}
+                            {/* <div data-bs-dismiss="modal" id="wallet-connect-binance chain wallet" className="c-list border-b px-3 py-2 d-flex align-items-center cursor-pointer" onClick={ handleConnectWalletTrust }>
+                                <div className="text-white mr-auto"> Wallet Connect</div>
+                                <img src={walletconnect_img} className="me-2 trustwallet" alt="casperpad" />
                             </div> */}
                         </>
                     )}

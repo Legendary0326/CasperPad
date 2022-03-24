@@ -7,13 +7,13 @@ import { ProgressBar } from 'react-bootstrap';
 import { 
     useSoldAmount,
     useGetParticipants
-} from '../../util/interact';
+} from '../../util/interactNew';
 import { 
     whitelistOfTiers,
     preSaleAmount
-} from '../../contract_ABI/vestingData';
+} from '../../contract_ABI/vestingDataNew';
 
-export default function CustomCard({ project }) {
+export default function CustomCardNew({ project }) {
     const unmounted = useRef(true);
     const [totalPresaleAmount, setTotalPresaleAmount] = useState(0);
     const [soldAmount, setSoldAmount] = useState(0);
@@ -40,7 +40,7 @@ export default function CustomCard({ project }) {
             <div className="custom-card-header">
                 <a href={"/project/" + project.contractAddress}><img className="tokenLogo" src={project.picture} alt="project profile"></img></a>
                 <div className="custom-card-title">
-                    <strong>{project.name + ' (' + 'Six Tiers' + ')'}</strong>
+                    <strong>{project.name + ' (' + 'Five Tiers' + ')'}</strong>
                     <div className="social-links">
                         <a href="https://Casper-pad.com"><SiWebpack className="social-link" /></a>
                         <a href="https://twitter.com/Casper_Pad"><AiFillTwitterCircle className="social-link" /></a>
@@ -83,6 +83,6 @@ export default function CustomCard({ project }) {
     );
 }
 
-CustomCard.propTypes = {
+CustomCardNew.propTypes = {
     project: PropTypes.object.isRequired,
 }

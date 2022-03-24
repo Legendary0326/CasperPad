@@ -355,7 +355,7 @@ button:focus { outline: none; }
   width: 60%;
   margin-left: 10%;
   justify-content: center;
-  /* display: grid; */
+  display: grid;
   grid-template-columns: repeat(2, 1fr);
 }
 .project-title:not(:first-of-type) { margin-top: 150px; }

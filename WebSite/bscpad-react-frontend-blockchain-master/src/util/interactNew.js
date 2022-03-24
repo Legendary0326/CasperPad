@@ -8,12 +8,10 @@ import {
   busdTokenAddress, 
   whitelistOfTiers,
   usdtTokenAddress 
-} from '../contract_ABI/vestingData';
+} from '../contract_ABI/vestingDataNew';
 
-const vestingContractAbi = require('../contract_ABI/vesting_contract_abi.json');
+const vestingContractAbi = require('../contract_ABI/vesting_contract_new_abi.json');
 const cspdContractAbi = require('../contract_ABI/cspd_contract_abi.json');
-// const busdContractAbi = require('../contract_ABI/cspd_contract_abi.json');
-// const usdtContractAbi = require('../contract_ABI/cspd_contract_abi.json');
 const busdContractAbi = require('../contract_ABI/busd_contract_abi.json');
 const usdtContractAbi = require('../contract_ABI/usdt_contract_abi.json');
 

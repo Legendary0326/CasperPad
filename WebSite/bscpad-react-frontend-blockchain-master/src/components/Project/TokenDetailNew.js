@@ -4,7 +4,7 @@ import { SiWebpack, AiFillTwitterCircle, AiOutlineMedium, FaTelegramPlane, BsCir
 import { ProgressBar } from 'react-bootstrap';
 import tokenLogo from '../../assets/img/CasperPad_Logo.png';
 import MyModal from '../modal/Modal';
-import BuyModal from '../modal/BuyModal';
+import BuyModalNew from '../modal/BuyModalNew';
 import { useEthers, useTokenBalance } from "@usedapp/core";
 import { Container, Row, Col } from 'react-bootstrap';
 import { 
@@ -16,7 +16,7 @@ import {
     useGetTierOfAccount,
     useVestingContractMethod, 
     useCspdContractMethod
-} from '../../util/interact';
+} from '../../util/interactNew';
 import { 
     cspdTokenAddress, 
     busdTokenAddress, 
@@ -26,9 +26,9 @@ import {
     saleStartTime,
     saleEndTime,
     preSaleAmount 
-} from '../../contract_ABI/vestingData';
+} from '../../contract_ABI/vestingDataNew';
 
-export default function TokenDetail() {
+export default function TokenDetailNew() {
     const unmounted = useRef(true);
     const project = {
         name: 'CSPD',
@@ -198,7 +198,7 @@ export default function TokenDetail() {
                 </Row>
             </Container>
             <MyModal isOpen = { isOpen } setIsOpen = {setIsOpen} onlyOneToast = {true}/>
-            <BuyModal isOpen = { isOpenBuy } setIsOpen = {setIsOpenBuy} onlyOneToast = {false}/>
+            <BuyModalNew isOpen = { isOpenBuy } setIsOpen = {setIsOpenBuy} onlyOneToast = {false}/>
         </>
     );
 }

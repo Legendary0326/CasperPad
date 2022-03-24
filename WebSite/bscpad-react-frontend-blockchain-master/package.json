@@ -11,6 +11,8 @@
         "@testing-library/react": "^11.1.0",
         "@testing-library/user-event": "^12.1.10",
         "@usedapp/core": "^0.6.3",
+        "@web3-react/core": "^6.1.9",
+        "@web3-react/walletconnect-connector": "^6.2.8",
         "bootstrap": "^4.6.0",
         "charenc": "0.0.2",
         "crypt": "0.0.2",
@@ -37,7 +39,8 @@
         "three-css2drender": "^1.0.0",
         "three-obj-loader": "^1.1.3",
         "three-objmtll-loader": "^1.0.1",
-        "web-vitals": "^1.0.1"
+        "web-vitals": "^1.0.1",
+        "yarn": "^1.22.17"
     },
     "scripts": {
         "start": "craco start",

@@ -10,9 +10,19 @@ import { vestingContractAddress } from '../contract_ABI/vestingData';
 
 const projects = [
     {
-        contractAddress: vestingContractAddress,
+        contractAddress: 'option2',
         picture: tokenLogo,
-        name: 'CSPD',
+        name: 'CSPD-Option2',
+        status: 'Open',
+        progress: 0,
+        swap_rate: '0.008 USD',
+        cap: '$' + 11315944 * 0.008,
+        access: 'Public',
+        message: 'CasperPad will empower crypto currency projects with the ability to distribute tokens and raise liquidity.'
+    }, {
+        contractAddress: 'option1',
+        picture: tokenLogo,
+        name: 'CSPD-Option1',
         status: 'Open',
         progress: 0,
         swap_rate: '0.008 USD',
